@@ -17,7 +17,8 @@ public class SecurityConfig {
                         .requestMatchers("/v1/roles/**").permitAll()
                         .requestMatchers("/v1/users/**").permitAll()
 //                                .requestMatchers("/v1/roles/**", "/v1/users/**").permitAll()
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 );
 
         return http.build();

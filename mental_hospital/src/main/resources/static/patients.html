@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - Patients</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">💜</div>
+        <div class="logo-text">
+            <h2>MindCare</h2>
+            <span>Mental Health Center</span>
+        </div>
+    </div>
+
+    <div class="menu-title">Main</div>
+
+    <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon">⌂</span>
+        <span>Dashboard</span>
+    </a>
+
+    <a href="patients.html" class="nav-item active">
+        <span class="nav-icon">👥</span>
+        <span>Patients</span>
+    </a>
+
+    <a href="doctors.html" class="nav-item">
+        <span class="nav-icon">🩺</span>
+        <span>Doctors</span>
+    </a>
+
+    <a href="nurse.html" class="nav-item">
+        <span class="nav-icon">👩‍⚕️</span>
+        <span>Nurses</span>
+    </a>
+
+    <a href="appointments.html" class="nav-item">
+        <span class="nav-icon">📅</span>
+        <span>Appointments</span>
+    </a>
+
+    <div class="menu-title">Patient Care</div>
+
+    <a href="admission.html" class="nav-item">
+        <span class="nav-icon">🏥</span>
+        <span>Admissions</span>
+    </a>
+
+    <a href="discharges.html" class="nav-item">
+        <span class="nav-icon">🚪</span>
+        <span>Discharges</span>
+    </a>
+
+    <a href="diagnoses.html" class="nav-item">
+        <span class="nav-icon">🧠</span>
+        <span>Diagnoses</span>
+    </a>
+
+    <a href="treatments.html" class="nav-item">
+        <span class="nav-icon">💚</span>
+        <span>Treatments</span>
+    </a>
+
+    <a href="prescriptions.html" class="nav-item">
+        <span class="nav-icon">📋</span>
+        <span>Prescriptions</span>
+    </a>
+
+    <div class="menu-title">Hospital</div>
+
+    <a href="departments.html" class="nav-item">
+        <span class="nav-icon">🏢</span>
+        <span>Departments</span>
+    </a>
+
+    <a href="wards.html" class="nav-item">
+        <span class="nav-icon">🏨</span>
+        <span>Wards</span>
+    </a>
+
+    <a href="beds.html" class="nav-item">
+        <span class="nav-icon">🛏️</span>
+        <span>Beds</span>
+    </a>
+
+    <a href="medications.html" class="nav-item">
+        <span class="nav-icon">💊</span>
+        <span>Medications</span>
+    </a>
+
+    <div class="menu-title">Administration</div>
+
+    <a href="emergency-contacts.html" class="nav-item">
+        <span class="nav-icon">📞</span>
+        <span>Emergency Contacts</span>
+    </a>
+
+    <a href="payments.html" class="nav-item">
+        <span class="nav-icon">💳</span>
+        <span>Payments</span>
+    </a>
+
+    <a href="user.html" class="nav-item">
+        <span class="nav-icon">👤</span>
+        <span>Users</span>
+    </a>
+
+    <a href="role.html" class="nav-item">
+        <span class="nav-icon">🔐</span>
+        <span>Roles</span>
+    </a>
+
+</aside>
+
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div class="page-title">
+            <h1>Patients</h1>
+            <p>Manage and monitor all registered patients.</p>
+        </div>
+
+        <div class="top-actions">
+            <input class="search" placeholder="Search patients...">
+
+            <div class="notification">🔔</div>
+
+            <div class="profile">
+                <div class="avatar">AD</div>
+                <div class="profile-info">
+                    <strong>Admin</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="card section">
+
+        <div class="card-header">
+
+            <div>
+                <h3>Add New Patient</h3>
+                <p style="font-size:10px;color:#999;margin-top:4px">
+                    Register a new patient in the hospital system.
+                </p>
+            </div>
+
+        </div>
+
+        <form>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" placeholder="Enter patient name">
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date">
+                </div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select>
+                        <option>Select gender</option>
+                        <option>MALE</option>
+                        <option>FEMALE</option>
+                        <option>OTHER</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="text" placeholder="07XXXXXXXX">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="patient@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Patient Status</label>
+                    <select>
+                        <option>ACTIVE</option>
+                        <option>INACTIVE</option>
+                        <option>DISCHARGED</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label>Address</label>
+                    <textarea placeholder="Enter patient address"></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="reset" class="btn btn-light">
+                    Clear
+                </button>
+
+                <button class="btn btn-primary">
+                    + Register Patient
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <div class="patient-grid">
+
+        <div class="patient-card">
+
+            <div class="patient-header">
+                <div class="patient-avatar">NS</div>
+
+                <div class="patient-info">
+                    <h3>Nethmi Silva</h3>
+                    <p>Patient ID: #P00124</p>
+                </div>
+            </div>
+
+            <div style="margin-top:12px">
+                <span class="badge badge-success">Active</span>
+            </div>
+
+            <div class="patient-details">
+
+                <div class="detail-item">
+                    <span>Date of Birth</span>
+                    <strong>1999-04-12</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Gender</span>
+                    <strong>Female</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Contact</span>
+                    <strong>071 234 5678</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Status</span>
+                    <strong>Outpatient</strong>
+                </div>
+
+            </div>
+
+            <div style="margin-top:18px">
+                <button class="btn btn-light">View Profile</button>
+                <button class="btn btn-primary">Edit</button>
+            </div>
+
+        </div>
+
+
+        <div class="patient-card">
+
+            <div class="patient-header">
+                <div class="patient-avatar">RP</div>
+
+                <div class="patient-info">
+                    <h3>Ravindu Perera</h3>
+                    <p>Patient ID: #P00125</p>
+                </div>
+            </div>
+
+            <div style="margin-top:12px">
+                <span class="badge badge-warning">Admitted</span>
+            </div>
+
+            <div class="patient-details">
+
+                <div class="detail-item">
+                    <span>Date of Birth</span>
+                    <strong>1995-08-21</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Gender</span>
+                    <strong>Male</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Contact</span>
+                    <strong>077 456 8912</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Ward</span>
+                    <strong>Ward A</strong>
+                </div>
+
+            </div>
+
+            <div style="margin-top:18px">
+                <button class="btn btn-light">View Profile</button>
+                <button class="btn btn-primary">Edit</button>
+            </div>
+
+        </div>
+
+
+        <div class="patient-card">
+
+            <div class="patient-header">
+                <div class="patient-avatar">SM</div>
+
+                <div class="patient-info">
+                    <h3>Sewmi Madushika</h3>
+                    <p>Patient ID: #P00126</p>
+                </div>
+            </div>
+
+            <div style="margin-top:12px">
+                <span class="badge badge-success">Active</span>
+            </div>
+
+            <div class="patient-details">
+
+                <div class="detail-item">
+                    <span>Date of Birth</span>
+                    <strong>2001-01-15</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Gender</span>
+                    <strong>Female</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Contact</span>
+                    <strong>075 654 3210</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Status</span>
+                    <strong>Outpatient</strong>
+                </div>
+
+            </div>
+
+            <div style="margin-top:18px">
+                <button class="btn btn-light">View Profile</button>
+                <button class="btn btn-primary">Edit</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

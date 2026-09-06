@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindCare - Emergency Contacts</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+  <div class="logo">
+    <div class="logo-icon">💜</div>
+    <div class="logo-text">
+      <h2>MindCare</h2>
+      <span>Mental Health Center</span>
+    </div>
+  </div>
+
+  <div class="menu-title">Main</div>
+
+  <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+  <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
+  <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
+  <a href="nurse.html" class="nav-item"><span class="nav-icon">👩‍⚕️</span><span>Nurses</span></a>
+  <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
+
+  <div class="menu-title">Patient Care</div>
+
+  <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
+  <a href="discharges.html" class="nav-item"><span class="nav-icon">🚪</span><span>Discharges</span></a>
+  <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
+  <a href="treatments.html" class="nav-item"><span class="nav-icon">💚</span><span>Treatments</span></a>
+  <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
+
+  <div class="menu-title">Hospital</div>
+
+  <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
+  <a href="wards.html" class="nav-item"><span class="nav-icon">🏨</span><span>Wards</span></a>
+  <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
+  <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
+
+  <div class="menu-title">Administration</div>
+
+  <a href="emergency-contacts.html" class="nav-item active"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
+  <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
+  <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
+  <a href="role.html" class="nav-item"><span class="nav-icon">🔐</span><span>Roles</span></a>
+
+</aside>
+
+
+<main class="main">
+
+  <div class="topbar">
+
+    <div class="page-title">
+      <h1>Emergency Contacts</h1>
+      <p>Manage patient emergency contact information.</p>
+    </div>
+
+    <div class="top-actions">
+      <input class="search" placeholder="Search contacts...">
+      <div class="notification">🔔</div>
+
+      <div class="profile">
+        <div class="avatar">AD</div>
+        <div class="profile-info">
+          <strong>Admin</strong>
+          <span>Administrator</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="card section">
+
+    <div class="card-header">
+      <h3>Add Emergency Contact</h3>
+    </div>
+
+    <form>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Patient</label>
+          <select>
+            <option>Select patient</option>
+            <option>Nethmi Silva</option>
+            <option>Ravindu Perera</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Contact Name</label>
+          <input type="text" placeholder="Enter contact name">
+        </div>
+
+        <div class="form-group">
+          <label>Relationship</label>
+          <input type="text" placeholder="Mother / Father / Guardian">
+        </div>
+
+        <div class="form-group">
+          <label>Contact Number</label>
+          <input type="text" placeholder="07XXXXXXXX">
+        </div>
+
+        <div class="form-group full">
+          <label>Address</label>
+          <textarea placeholder="Enter contact address"></textarea>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="reset" class="btn btn-light">Clear</button>
+        <button class="btn btn-primary">+ Save Contact</button>
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="card-header">
+      <h3>Emergency Contact List</h3>
+    </div>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Contact Name</th>
+          <th>Relationship</th>
+          <th>Contact Number</th>
+          <th>Address</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+          <td><strong>Nethmi Silva</strong></td>
+          <td>Sunil Silva</td>
+          <td>Father</td>
+          <td>071 222 3344</td>
+          <td>Kalutara</td>
+          <td><button class="btn btn-light">Edit</button></td>
+        </tr>
+
+        <tr>
+          <td><strong>Ravindu Perera</strong></td>
+          <td>Malini Perera</td>
+          <td>Mother</td>
+          <td>077 333 4455</td>
+          <td>Colombo</td>
+          <td><button class="btn btn-light">Edit</button></td>
+        </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

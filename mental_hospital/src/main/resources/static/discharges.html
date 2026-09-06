@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindCare - Discharges</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+  <div class="logo">
+    <div class="logo-icon">💜</div>
+    <div class="logo-text">
+      <h2>MindCare</h2>
+      <span>Mental Health Center</span>
+    </div>
+  </div>
+
+  <div class="menu-title">Main</div>
+
+  <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+  <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
+  <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
+  <a href="nurse.html" class="nav-item"><span class="nav-icon">👩‍⚕️</span><span>Nurses</span></a>
+  <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
+
+  <div class="menu-title">Patient Care</div>
+
+  <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
+  <a href="discharges.html" class="nav-item active"><span class="nav-icon">🚪</span><span>Discharges</span></a>
+  <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
+  <a href="treatments.html" class="nav-item"><span class="nav-icon">💚</span><span>Treatments</span></a>
+  <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
+
+  <div class="menu-title">Hospital</div>
+
+  <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
+  <a href="wards.html" class="nav-item"><span class="nav-icon">🏨</span><span>Wards</span></a>
+  <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
+  <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
+
+  <div class="menu-title">Administration</div>
+
+  <a href="emergency-contacts.html" class="nav-item"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
+  <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
+  <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
+  <a href="role.html" class="nav-item"><span class="nav-icon">🔐</span><span>Roles</span></a>
+
+</aside>
+
+
+<main class="main">
+
+  <div class="topbar">
+
+    <div class="page-title">
+      <h1>Discharges</h1>
+      <p>Manage completed patient discharges.</p>
+    </div>
+
+    <div class="top-actions">
+      <input class="search" placeholder="Search discharges...">
+      <div class="notification">🔔</div>
+
+      <div class="profile">
+        <div class="avatar">AD</div>
+        <div class="profile-info">
+          <strong>Admin</strong>
+          <span>Administrator</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="card section">
+
+    <div class="card-header">
+      <h3>Process Patient Discharge</h3>
+    </div>
+
+    <form>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Admission</label>
+          <select>
+            <option>Select admission</option>
+            <option>Admission #1001 - Ravindu Perera</option>
+            <option>Admission #1002 - Kavindi Mendis</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Doctor</label>
+          <select>
+            <option>Select doctor</option>
+            <option>Dr. Kasun Perera</option>
+            <option>Dr. Amali Fernando</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Discharge Date</label>
+          <input type="date">
+        </div>
+
+        <div class="form-group">
+          <label>Discharge Status</label>
+          <select>
+            <option>DISCHARGED</option>
+            <option>APPROVED</option>
+            <option>PENDING</option>
+          </select>
+        </div>
+
+        <div class="form-group full">
+          <label>Remarks</label>
+          <textarea placeholder="Enter discharge remarks"></textarea>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="reset" class="btn btn-light">Clear</button>
+        <button class="btn btn-primary">Process Discharge</button>
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="card-header">
+      <h3>Discharge History</h3>
+    </div>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Admission</th>
+          <th>Doctor</th>
+          <th>Discharge Date</th>
+          <th>Remarks</th>
+          <th>Status</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+          <td>
+            <div class="patient-cell">
+              <div class="small-avatar">AS</div>
+              <strong>Amaya Senuri</strong>
+            </div>
+          </td>
+
+          <td>#1008</td>
+          <td>Dr. Kasun Perera</td>
+          <td>2026-09-03</td>
+          <td>Condition improved</td>
+
+          <td>
+            <span class="badge badge-success">Discharged</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="patient-cell">
+              <div class="small-avatar">DM</div>
+              <strong>Dilshan Maduranga</strong>
+            </div>
+          </td>
+
+          <td>#1005</td>
+          <td>Dr. Tharindu Silva</td>
+          <td>2026-09-01</td>
+          <td>Follow-up recommended</td>
+
+          <td>
+            <span class="badge badge-success">Discharged</span>
+          </td>
+        </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

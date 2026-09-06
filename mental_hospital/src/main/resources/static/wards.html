@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindCare - Wards</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+  <div class="logo">
+    <div class="logo-icon">💜</div>
+    <div class="logo-text">
+      <h2>MindCare</h2>
+      <span>Mental Health Center</span>
+    </div>
+  </div>
+
+  <div class="menu-title">Main</div>
+
+  <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+  <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
+  <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
+  <a href="nurse.html" class="nav-item"><span class="nav-icon">👩‍⚕️</span><span>Nurses</span></a>
+  <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
+
+  <div class="menu-title">Patient Care</div>
+
+  <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
+  <a href="discharges.html" class="nav-item"><span class="nav-icon">🚪</span><span>Discharges</span></a>
+  <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
+  <a href="treatments.html" class="nav-item"><span class="nav-icon">💚</span><span>Treatments</span></a>
+  <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
+
+  <div class="menu-title">Hospital</div>
+
+  <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
+  <a href="wards.html" class="nav-item active"><span class="nav-icon">🏨</span><span>Wards</span></a>
+  <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
+  <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
+
+  <div class="menu-title">Administration</div>
+
+  <a href="emergency-contacts.html" class="nav-item"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
+  <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
+  <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
+  <a href="role.html" class="nav-item"><span class="nav-icon">🔐</span><span>Roles</span></a>
+
+</aside>
+
+
+<main class="main">
+
+  <div class="topbar">
+
+    <div class="page-title">
+      <h1>Wards</h1>
+      <p>Manage hospital wards and their capacity.</p>
+    </div>
+
+    <div class="top-actions">
+      <input class="search" placeholder="Search wards...">
+      <div class="notification">🔔</div>
+
+      <div class="profile">
+        <div class="avatar">AD</div>
+        <div class="profile-info">
+          <strong>Admin</strong>
+          <span>Administrator</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="card section">
+
+    <div class="card-header">
+      <h3>Add New Ward</h3>
+    </div>
+
+    <form>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Ward Name</label>
+          <input type="text" placeholder="Enter ward name">
+        </div>
+
+        <div class="form-group">
+          <label>Ward Type</label>
+          <select>
+            <option>Select ward type</option>
+            <option>Male Ward</option>
+            <option>Female Ward</option>
+            <option>General Ward</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Capacity</label>
+          <input type="number" placeholder="Enter capacity">
+        </div>
+
+        <div class="form-group">
+          <label>Department</label>
+          <select>
+            <option>Select department</option>
+            <option>Psychiatry</option>
+            <option>Psychology</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Ward Status</label>
+          <select>
+            <option>ACTIVE</option>
+            <option>INACTIVE</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="reset" class="btn btn-light">Clear</button>
+        <button class="btn btn-primary">+ Add Ward</button>
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div class="grid-3">
+
+    <div class="card">
+
+      <div class="card-header">
+        <h3>Female Ward</h3>
+        <span>FW-01</span>
+      </div>
+
+      <p style="font-size:11px;color:#888">Psychiatry</p>
+
+      <h2 style="margin-top:15px">18 / 22</h2>
+      <p style="font-size:10px;color:#999">Beds occupied</p>
+
+      <div class="progress" style="margin-top:12px">
+        <div class="progress-bar" style="width:82%"></div>
+      </div>
+
+      <div style="margin-top:15px">
+        <span class="badge badge-success">Active</span>
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="card-header">
+        <h3>Male Ward</h3>
+        <span>MW-01</span>
+      </div>
+
+      <p style="font-size:11px;color:#888">Psychiatry</p>
+
+      <h2 style="margin-top:15px">13 / 20</h2>
+      <p style="font-size:10px;color:#999">Beds occupied</p>
+
+      <div class="progress" style="margin-top:12px">
+        <div class="progress-bar" style="width:65%"></div>
+      </div>
+
+      <div style="margin-top:15px">
+        <span class="badge badge-success">Active</span>
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="card-header">
+        <h3>General Ward</h3>
+        <span>GW-01</span>
+      </div>
+
+      <p style="font-size:11px;color:#888">General Care</p>
+
+      <h2 style="margin-top:15px">10 / 18</h2>
+      <p style="font-size:10px;color:#999">Beds occupied</p>
+
+      <div class="progress" style="margin-top:12px">
+        <div class="progress-bar" style="width:55%"></div>
+      </div>
+
+      <div style="margin-top:15px">
+        <span class="badge badge-success">Active</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #eeeaff, #faf9ff);
+        }
+
+        .login-wrapper {
+            width: 900px;
+            max-width: 95%;
+            min-height: 540px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(70, 50, 130, .12);
+        }
+
+        .login-left {
+            background: linear-gradient(145deg, #7657d9, #6245c2);
+            color: white;
+            padding: 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-logo {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .login-left h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .login-left p {
+            color: #e9e3ff;
+            line-height: 1.7;
+            font-size: 13px;
+        }
+
+        .login-quote {
+            margin-top: 45px;
+            padding: 18px;
+            background: rgba(255,255,255,.12);
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .login-right {
+            padding: 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-right h2 {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 30px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 17px;
+        }
+
+        .forgot {
+            text-align: right;
+            color: var(--primary);
+            font-size: 11px;
+            text-decoration: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        @media(max-width:700px) {
+            .login-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .login-left {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <div class="login-left">
+        <div class="login-logo">💜</div>
+        <h1>MindCare</h1>
+        <p>
+            Mental Health Hospital Management System
+            designed to make patient care simpler,
+            safer and more organized.
+        </p>
+
+        <div class="login-quote">
+            🌿 <strong>Care. Support. Heal.</strong><br><br>
+            Every patient deserves compassionate care.
+        </div>
+    </div>
+
+    <div class="login-right">
+
+        <h2>Welcome Back 👋</h2>
+        <p class="login-subtitle">
+            Sign in to access your MindCare dashboard.
+        </p>
+
+        <form class="login-form">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text"
+                       placeholder="Enter your username">
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password"
+                       placeholder="Enter your password">
+            </div>
+
+            <a href="#" class="forgot">
+                Forgot password?
+            </a>
+
+            <button class="btn btn-primary login-btn">
+                Sign In →
+            </button>
+
+        </form>
+
+        <div class="login-footer">
+            © 2026 MindCare Mental Health Center
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
