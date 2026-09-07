@@ -6,10 +6,9 @@ import lk.ijse.mental_hospital.dto.DepartmentDTO;
 import lk.ijse.mental_hospital.entity.Department;
 import lk.ijse.mental_hospital.service.DepartmentService;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static lk.ijse.mental_hospital.constant.ResponsCode.OPERATION_SUCCESS;
 import static lk.ijse.mental_hospital.constant.ResponseMassage.SUCCESS_MASSAGE;
@@ -26,6 +25,12 @@ public class DepartmentController {
     public CommonResponse saveDepartment(@RequestBody DepartmentDTO departmentDTO) {
         departmentService.saveDepartment(departmentDTO);
         return new CommonResponse(OPERATION_SUCCESS,SUCCESS_MASSAGE);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResponse getAllDepartments() {
+        List<DepartmentDTO> departmentDTOList = departmentService.getAllDepartments();
+        return new CommonResponse(OPERATION_SUCCESS,departmentDTOList,SUCCESS_MASSAGE);
     }
 
 }
