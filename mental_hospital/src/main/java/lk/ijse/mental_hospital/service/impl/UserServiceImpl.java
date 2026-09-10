@@ -135,25 +135,26 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+//
+//    @Override
+//    public void changeUserRole(long userId, long roleId) {
+//        log.info("changeUserRole");
+//        try {
+//            Optional<User> user = userRepository.findById(userId);
+//            if (user.isEmpty()) {
+//                throw new RuntimeException("User not found");
+//            }
+//
+//            Role role = roleRepository.findById(roleId).orElseThrow(() -> new RuntimeException("Role not found"));
+//            User user1 = user.get();
+//            user1.setRole(role);
+//            userRepository.save(user1);
+//
+//        } catch (Exception e) {
+//            log.error("changeUserRole error");
+//            throw e;
+//        }
+//    }
 
-    @Override
-    public void changeUserRole(long userId, long roleId) {
-        log.info("changeUserRole");
-        try {
-            Optional<User> user = userRepository.findById(userId);
-            if (user.isEmpty()) {
-                throw new RuntimeException("User not found");
-            }
-
-            Role role = roleRepository.findById(roleId).orElseThrow(() -> new RuntimeException("Role not found"));
-            User user1 = user.get();
-            user1.setRole(role);
-            userRepository.save(user1);
-
-        } catch (Exception e) {
-            log.error("changeUserRole error");
-            throw e;
-        }
-    }
 
 }

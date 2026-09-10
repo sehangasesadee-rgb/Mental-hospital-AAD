@@ -66,11 +66,11 @@ public CommonResponse getAllUsers() {
         return new CommonResponse(OPERATION_SUCCESS, userDTOList, SUCCESS_MASSAGE);
     }
 
-    @PatchMapping("/{userId}/role/{roleId}")
-    public CommonResponse changeUserRole(@PathVariable long userId, @PathVariable long roleId) {
-        userService.changeUserRole(userId, roleId);
-        return new CommonResponse(OPERATION_SUCCESS, SUCCESS_MASSAGE);
-    }
+//    @PatchMapping("/{userId}/role/{roleId}")
+//    public CommonResponse changeUserRole(@PathVariable long userId, @PathVariable long roleId) {
+//        userService.changeUserRole(userId, roleId);
+//        return new CommonResponse(OPERATION_SUCCESS, SUCCESS_MASSAGE);
+//    }
 
 }
 

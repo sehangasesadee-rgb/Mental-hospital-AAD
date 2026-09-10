@@ -1,6 +1,7 @@
 package lk.ijse.mental_hospital.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.mental_hospital.enumaration.BedStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,8 @@ public class Bed {
     private String bedType;
 
     @Column(nullable = false)
-    private String bedStatus;
+    @Enumerated(EnumType.STRING)
+    private BedStatus bedStatus;
 
     @ManyToOne
     @JoinColumn(name = "ward_id", nullable = false)

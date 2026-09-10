@@ -1,6 +1,8 @@
 package lk.ijse.mental_hospital.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.mental_hospital.enumaration.DoctorSpecialization;
+import lk.ijse.mental_hospital.enumaration.DoctorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,12 +30,14 @@ public class Doctor {
     private String contactNumber;
 
     @Column(nullable = false)
-    private String specialization;
+    @Enumerated(EnumType.STRING)
+    private DoctorSpecialization specialization;
 
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
     @Column(nullable = false)
-    private String doctorStatus;
+    @Enumerated(EnumType.STRING)
+    private DoctorStatus doctorStatus = DoctorStatus.ACTIVE;
 }

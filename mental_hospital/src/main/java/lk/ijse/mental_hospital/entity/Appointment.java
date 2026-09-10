@@ -1,6 +1,7 @@
 package lk.ijse.mental_hospital.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.mental_hospital.enumaration.AppoinmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,8 @@ public class Appointment {
     private LocalTime appointmentTime;
 
     @Column(nullable = false)
-    private String appointmentStatus;
+    @Enumerated(EnumType.STRING)
+    private AppoinmentStatus appointmentStatus;
 
     @Column(length = 500)
     private String reason;

@@ -1,5 +1,7 @@
 package lk.ijse.mental_hospital.dto;
 
+import lk.ijse.mental_hospital.enumaration.DoctorSpecialization;
+import lk.ijse.mental_hospital.enumaration.DoctorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,7 @@ public class DoctorDTO {
     private String doctorName;
     private String email;
     private String contactNumber;
-    private String specialization;
+    private DoctorSpecialization specialization;
     private Long departmentId;
-    private String doctorStatus;
+    private DoctorStatus doctorStatus;
 }

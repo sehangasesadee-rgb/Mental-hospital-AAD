@@ -1,6 +1,7 @@
 package lk.ijse.mental_hospital.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.mental_hospital.enumaration.WardStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,6 @@ public class Ward {
     private Department department;
 
     @Column(nullable = false)
-    private String wardStatus;
+    @Enumerated(EnumType.STRING)
+    private WardStatus wardStatus = WardStatus.ACTIVE;
 }

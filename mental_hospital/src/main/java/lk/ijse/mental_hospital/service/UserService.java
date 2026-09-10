@@ -16,6 +16,4 @@ public interface UserService {
 
     List<UserDTO> filterUser(String userName);
 
-    void changeUserRole(long userId, long roleId);
-
 }
