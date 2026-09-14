@@ -1,5 +1,6 @@
 package lk.ijse.mental_hospital.dto;
 
+import lk.ijse.mental_hospital.enumaration.AdmissionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ public class AdmissionDTO {
     private Long admissionId;
     private LocalDate admissionDate;
     private String reason;
-    private String admissionStatus;
+    private AdmissionStatus admissionStatus;
     private Long patientId;
     private Long wardId;
     private Long bedId;

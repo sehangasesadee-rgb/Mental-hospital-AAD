@@ -2,6 +2,7 @@ package lk.ijse.mental_hospital.service.impl;
 
 import lk.ijse.mental_hospital.dto.AdmissionDTO;
 import lk.ijse.mental_hospital.entity.*;
+import lk.ijse.mental_hospital.enumaration.AdmissionStatus;
 import lk.ijse.mental_hospital.repository.*;
 import lk.ijse.mental_hospital.service.AdmissionService;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,7 @@ public class AdmissionServiceImpl implements AdmissionService {
         admission.setDoctor(optionalDoctor.get());
         admissionRepository.save(admission);
 
+
     }
 
     @Override
@@ -132,4 +134,45 @@ public class AdmissionServiceImpl implements AdmissionService {
         }
     }
 
+    @Override
+    public void deleteAdmission(long id) {
+        log.info("deleteAdmission");
+        try {
+            Optional<Admission> optionalAdmission = admissionRepository.findById(id);
+            if (optionalAdmission.isEmpty()) {
+                throw new RuntimeException("Admission not found");
+            }
+            Admission admission = optionalAdmission.get();
+            admission.setAdmissionStatus(AdmissionStatus.REJECTED);
+            admissionRepository.save(admission);
+        } catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    public List<AdmissionDTO> filterAdmission(Long id) {
+        try {
+            List<AdmissionDTO> admissionDTOList = new ArrayList<>();
+            List<Admission> admissions = admissionRepository.findAll();
+            for (Admission admission : admissions) {
+                AdmissionDTO admissionDTO = new  AdmissionDTO(
+                        admission.getAdmissionId(),
+                        admission.getAdmissionDate(),
+                        admission.getReason(),
+                        admission.getAdmissionStatus(),
+                        admission.getPatient().getPatientId(),
+                        admission.getWard().getWardId(),
+                        admission.getBed().getBedId(),
+                        admission.getDoctor().getDoctorId()
+                );
+                admissionDTOList.add(admissionDTO);
+
+            }
+            return admissionDTOList;
+        }catch (Exception e){
+            log.error("Error in filterAdmission");
+            throw e;
+        }
+    }
 }

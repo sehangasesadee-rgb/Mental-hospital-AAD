@@ -150,3 +150,14 @@ public class DoctorServiceImpl implements DoctorService {
 
 //    }
 }
+
+
+
+
+
+
+
+
+
+
+/// ////////////////////doc eke awlk thiyed bln onaa//////

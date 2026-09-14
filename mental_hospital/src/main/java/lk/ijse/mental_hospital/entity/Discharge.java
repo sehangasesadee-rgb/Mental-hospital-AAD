@@ -1,6 +1,7 @@
 package lk.ijse.mental_hospital.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.mental_hospital.enumaration.DischargeStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,8 @@ public class Discharge {
     private String remarks;
 
     @Column(nullable = false)
-    private String dischargeStatus;
+    @Enumerated(EnumType.STRING)
+    private DischargeStatus dischargeStatus;
 
     @OneToOne
     @JoinColumn(name = "admission_id", nullable = false, unique = true)

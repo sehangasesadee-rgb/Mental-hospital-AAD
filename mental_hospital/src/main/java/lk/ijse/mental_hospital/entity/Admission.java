@@ -1,6 +1,7 @@
 package lk.ijse.mental_hospital.entity;
 
 import jakarta.persistence.*;
+import lk.ijse.mental_hospital.enumaration.AdmissionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,8 @@ public class Admission {
     private String reason;
 
     @Column(nullable = false)
-    private String admissionStatus;
+    @Enumerated(EnumType.STRING)
+    private AdmissionStatus admissionStatus;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)

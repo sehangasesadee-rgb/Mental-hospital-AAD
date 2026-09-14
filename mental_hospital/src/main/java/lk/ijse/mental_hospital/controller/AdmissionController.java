@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static lk.ijse.mental_hospital.constant.ResponsCode.OPERATION_SUCCESS;
 import static lk.ijse.mental_hospital.constant.ResponseMassage.SUCCESS_MASSAGE;
 
@@ -47,5 +49,18 @@ public class AdmissionController {
         admissionService.updateAdmission(admissionDTO);
         return new CommonResponse(OPERATION_SUCCESS, SUCCESS_MASSAGE);
     }
+
+    @DeleteMapping(value = "/{AdmissionId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResponse deleteAdmission(@PathVariable  long AdmissionId) {
+        admissionService.deleteAdmission(AdmissionId);
+        return new CommonResponse(OPERATION_SUCCESS, SUCCESS_MASSAGE);
+    }
+
+    @GetMapping(value = "/filter",produces = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResponse filterAdmission(@RequestParam(value = "admissionId") long admissionId) {
+        List<AdmissionDTO> admissionList = admissionService.filterAdmission(admissionId);
+        return new CommonResponse(OPERATION_SUCCESS, admissionList,SUCCESS_MASSAGE);
+    }
+
 
 }

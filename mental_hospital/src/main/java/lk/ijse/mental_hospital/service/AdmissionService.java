@@ -11,4 +11,10 @@ public interface AdmissionService {
     List<AdmissionDTO> findAllAdmissions();
 
     void updateAdmission(AdmissionDTO admissionDTO);
+
+    void deleteAdmission(long id);
+
+    List<AdmissionDTO> filterAdmission(Long id);
+
+
 }
