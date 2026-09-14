@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface AdmissionRepository extends JpaRepository<Admission, Long> {
-    @Query(value = "SELECT * FROM admissions WHERE ?1 IS NULL OR admission_id",nativeQuery = true)
+    @Query(value = "SELECT * FROM admissions WHERE ?1 IS NULL OR admission_id = ?1",nativeQuery = true)
     List<Bed> filterAdmission(long id);
 
 

@@ -107,5 +107,8 @@ public class MedicationServiceImpl implements MedicationService {
             log.error("filterMedication error");
             throw e;
         }
+
+
+        ///  ///////delete ek na/////////////////////////////
     }
 }
