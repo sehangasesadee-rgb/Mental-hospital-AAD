@@ -67,4 +67,10 @@ public class TreatmentController {
                 SUCCESS_MASSAGE
         );
     }
+
+    @DeleteMapping("/{id}")
+    public CommonResponse deleteTreatment(@PathVariable Long id) {
+        treatmentService.changeStatus(id);
+        return new CommonResponse(OPERATION_SUCCESS,SUCCESS_MASSAGE);
+    }
 }

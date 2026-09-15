@@ -1,6 +1,5 @@
 package lk.ijse.mental_hospital.dto;
 
-import lk.ijse.mental_hospital.enumaration.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,12 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class LoginDTO {
 
-    private Long userId;
     private String userName;
     private String userPassword;
-    private UserStatus userStatus;
-    private Long roleId;
-
 }

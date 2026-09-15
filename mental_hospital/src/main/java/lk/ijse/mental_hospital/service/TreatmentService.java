@@ -15,4 +15,6 @@ public interface TreatmentService {
 
     List<TreatmentDTO> filterTreatments(Long id);
 
+    void changeStatus(Long id);
+
 }

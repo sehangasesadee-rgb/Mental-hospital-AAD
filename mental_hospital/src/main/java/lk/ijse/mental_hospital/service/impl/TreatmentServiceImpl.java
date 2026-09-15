@@ -8,6 +8,7 @@ import lk.ijse.mental_hospital.repository.DoctorRepository;
 import lk.ijse.mental_hospital.repository.PatientRepository;
 import lk.ijse.mental_hospital.repository.TreatmentRepository;
 import lk.ijse.mental_hospital.service.TreatmentService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +18,12 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TreatmentServiceImpl implements TreatmentService {
     private final TreatmentRepository treatmentRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
-    public TreatmentServiceImpl(TreatmentRepository treatmentRepository, PatientRepository patientRepository, DoctorRepository doctorRepository) {
-        this.treatmentRepository = treatmentRepository;
-        this.patientRepository = patientRepository;
-        this.doctorRepository = doctorRepository;
-    }
+
 
     @Override
     public void addTreatment(TreatmentDTO treatmentDTO) {
@@ -128,6 +126,31 @@ public class TreatmentServiceImpl implements TreatmentService {
             return treatmentDTOs;
         }catch (Exception e){
             log.error("Error in findAllTreatment");
+            throw e;
+        }
+    }
+
+    @Override
+    public void changeStatus(Long id) {
+        try {
+            Optional<Treatment> optional = treatmentRepository.findById(id);
+
+            if (optional.isEmpty()) {
+                throw new RuntimeException("Treatment not found");
+            }
+
+            Treatment treatment = optional.get();
+
+            if (treatment.getTreatmentStatus().equals("ACTIVE")) {
+                treatment.setTreatmentStatus("INACTIVE");
+            } else {
+                treatment.setTreatmentStatus("ACTIVE");
+            }
+
+            treatmentRepository.save(treatment);
+
+        } catch (Exception e) {
+            log.error("Error in changeStatus");
             throw e;
         }
     }

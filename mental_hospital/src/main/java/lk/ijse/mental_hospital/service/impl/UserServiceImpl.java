@@ -7,7 +7,9 @@ import lk.ijse.mental_hospital.enumaration.UserStatus;
 import lk.ijse.mental_hospital.repository.RoleRepository;
 import lk.ijse.mental_hospital.repository.UserRepository;
 import lk.ijse.mental_hospital.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,15 +18,14 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
+
 
     @Override
     public void saveUser(UserDTO userDTO) {
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
             User user = new User();
 
             user.setUserName(userDTO.getUserName());
-            user.setUserPassword(userDTO.getUserPassword());
+            user.setUserPassword(passwordEncoder.encode(userDTO.getUserPassword()));;
             user.setUserStatus(UserStatus.ACTIVE);
             user.setRole(role);
 
@@ -60,8 +61,10 @@ public class UserServiceImpl implements UserService {
                 UserDTO userDTO = new UserDTO();
                 userDTO.setUserId(user.getUserId());
                 userDTO.setUserName(user.getUserName());
-                userDTO.setUserPassword(user.getUserPassword());
-                userDTO.setUserStatus(user.getUserStatus().name());
+                user.setUserPassword(
+                        passwordEncoder.encode(userDTO.getUserPassword())
+                );
+                userDTO.setUserStatus(user.getUserStatus());
                 userDTO.setRoleId(user.getRole().getRoleId());
 
                 userDTOList.add(userDTO);
@@ -85,7 +88,7 @@ public class UserServiceImpl implements UserService {
             User user1 = user.get();
             user1.setUserName(userDTO.getUserName());
             user1.setUserPassword(userDTO.getUserPassword());
-            user1.setUserStatus(UserStatus.valueOf(userDTO.getUserStatus()));
+            user1.setUserStatus(userDTO.getUserStatus());
             Role role = roleRepository.findById(userDTO.getRoleId())
                     .orElseThrow(() -> new RuntimeException("Role not found"));
             user1.setRole(role);
@@ -124,7 +127,7 @@ public class UserServiceImpl implements UserService {
                 userDTO.setUserId(user.getUserId());
                 userDTO.setUserName(user.getUserName());
                 userDTO.setUserPassword(user.getUserPassword());
-                userDTO.setUserStatus(user.getUserStatus().name());
+                userDTO.setUserStatus(user.getUserStatus());
                 userDTO.setRoleId(user.getRole().getRoleId());
                 userDTOList.add(userDTO);
             }
