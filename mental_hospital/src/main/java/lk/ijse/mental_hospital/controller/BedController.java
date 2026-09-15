@@ -26,7 +26,7 @@ public class BedController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse addBed(@RequestBody BedDTO bedDTO){
         bedService.saveBed(bedDTO);
-        return new CommonResponse(OPERATION_SUCCESS, SUCCESS_MASSAGE);
+        return new CommonResponse(OPERATION_SUCCESS,SUCCESS_MASSAGE);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
