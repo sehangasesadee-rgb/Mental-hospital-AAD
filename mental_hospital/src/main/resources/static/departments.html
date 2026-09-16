@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindCare - Departments</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .card-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -20,7 +27,6 @@
   </div>
 
   <div class="menu-title">Main</div>
-
   <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
   <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
   <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
@@ -28,7 +34,6 @@
   <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
 
   <div class="menu-title">Patient Care</div>
-
   <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
   <a href="discharges.html" class="nav-item"><span class="nav-icon">🚪</span><span>Discharges</span></a>
   <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
@@ -36,14 +41,12 @@
   <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
 
   <div class="menu-title">Hospital</div>
-
   <a href="departments.html" class="nav-item active"><span class="nav-icon">🏢</span><span>Departments</span></a>
   <a href="wards.html" class="nav-item"><span class="nav-icon">🏨</span><span>Wards</span></a>
   <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
   <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
 
   <div class="menu-title">Administration</div>
-
   <a href="emergency-contacts.html" class="nav-item"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
   <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
   <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
@@ -62,7 +65,7 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search departments...">
+      <input class="search" id="searchDepartmentInput" placeholder="Search departments...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -80,36 +83,36 @@
   <div class="card section">
 
     <div class="card-header">
-      <h3>Add Department</h3>
+      <h3 id="formTitle">Add Department</h3>
     </div>
 
-    <form>
-
+    <form id="departmentForm">
+      <input type="hidden" id="departmentId">
       <div class="form-grid">
 
         <div class="form-group">
           <label>Department Name</label>
-          <input type="text" placeholder="Enter department name">
+          <input type="text" id="departmentName" placeholder="Enter department name" required>
         </div>
 
         <div class="form-group">
           <label>Department Status</label>
-          <select>
-            <option>ACTIVE</option>
-            <option>INACTIVE</option>
+          <select id="departmentStatus" required>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
           </select>
         </div>
 
         <div class="form-group full">
           <label>Description</label>
-          <textarea placeholder="Enter department description"></textarea>
+          <textarea id="description" placeholder="Enter department description"></textarea>
         </div>
 
       </div>
 
-      <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Add Department</button>
+      <div class="form-actions" style="margin-top: 15px;">
+        <button type="button" class="btn btn-light" id="resetBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">+ Add Department</button>
       </div>
 
     </form>
@@ -117,55 +120,163 @@
   </div>
 
 
-  <div class="grid-3">
-
-    <div class="card">
-
-      <div class="stat-icon purple">🧠</div>
-
-      <h3 style="margin-top:15px">Psychiatry</h3>
-
-      <p style="font-size:11px;color:#888;margin:8px 0 15px">
-        Psychiatric assessment and treatment services.
-      </p>
-
-      <span class="badge badge-success">Active</span>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="stat-icon blue">💭</div>
-
-      <h3 style="margin-top:15px">Psychology</h3>
-
-      <p style="font-size:11px;color:#888;margin:8px 0 15px">
-        Psychological assessment and therapy.
-      </p>
-
-      <span class="badge badge-success">Active</span>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="stat-icon green">💚</div>
-
-      <h3 style="margin-top:15px">Counseling</h3>
-
-      <p style="font-size:11px;color:#888;margin:8px 0 15px">
-        Counseling and mental wellness support.
-      </p>
-
-      <span class="badge badge-success">Active</span>
-
-    </div>
-
+  <!-- Dynamic Departments Grid -->
+  <div class="grid-3" id="departmentGrid">
+    <!-- Cards will load here dynamically from database -->
   </div>
 
 </main>
+
+<!-- jQuery Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  const token = localStorage.getItem("authToken");
+  const headers = { "Authorization": "Bearer " + token };
+
+  $(document).ready(function () {
+    loadAllDepartments();
+
+    // Reset / Cancel Form
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+    // Save or Update Form Submit
+    $('#departmentForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const deptId = $('#departmentId').val();
+      const departmentData = {
+        departmentId: deptId ? parseInt(deptId) : null,
+        departmentName: $('#departmentName').val().trim(),
+        departmentStatus: $('#departmentStatus').val(),
+        description: $('#description').val().trim()
+      };
+
+      const isUpdate = !!deptId;
+      const url = '/v1/department';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: headers,
+        data: JSON.stringify(departmentData),
+        success: function (res) {
+          if (res.status === 0 || res.statusCode === 200 || res.code === "00") {
+            alert(isUpdate ? "Department updated successfully!" : "Department saved successfully!");
+            resetForm();
+            loadAllDepartments();
+          } else {
+            alert(res.message || "Operation failed.");
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    });
+
+    // Search / Filter Live Handler
+    $('#searchDepartmentInput').on('input', function () {
+      const query = $(this).val().trim();
+      if (query === '') {
+        loadAllDepartments();
+      } else {
+        $.ajax({
+          url: `/v1/department/filter?departmentName=${encodeURIComponent(query)}`,
+          type: 'GET',
+          headers: headers,
+          success: function (res) {
+            renderDepartments(res.body || []);
+          }
+        });
+      }
+    });
+  });
+
+  function loadAllDepartments() {
+    $.ajax({
+      url: '/v1/department',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        renderDepartments(res.body || []);
+      }
+    });
+  }
+
+  function renderDepartments(departments) {
+    const grid = $('#departmentGrid');
+    grid.empty();
+
+    if (!departments || departments.length === 0) {
+      grid.html('<p style="grid-column: 1/-1; text-align:center; color:gray;">No departments found.</p>');
+      return;
+    }
+
+    departments.forEach(dept => {
+      const statusBadge = dept.departmentStatus === 'ACTIVE'
+              ? '<span class="badge badge-success">Active</span>'
+              : '<span class="badge badge-warning" style="background:#ffc107; color:#000;">Inactive</span>';
+
+      const card = `
+        <div class="card">
+          <div class="stat-icon purple">🏢</div>
+          <h3 style="margin-top:15px">${dept.departmentName}</h3>
+          <p style="font-size:11px;color:#888;margin:8px 0 15px">
+            ${dept.description || 'No description provided.'}
+          </p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            ${statusBadge}
+            <span style="font-size: 11px; color: #aaa;">ID: ${dept.departmentId}</span>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-light" style="padding:4px 10px; font-size:11px; flex:1;" onclick='editDepartment(${JSON.stringify(dept)})'>Edit</button>
+            <button class="btn btn-primary" style="padding:4px 10px; font-size:11px; flex:1; background:#dc3545; border-color:#dc3545;" onclick="deleteDepartment(${dept.departmentId})">Delete</button>
+          </div>
+        </div>
+      `;
+      grid.append(card);
+    });
+  }
+
+  function editDepartment(dept) {
+    $('#departmentId').val(dept.departmentId);
+    $('#departmentName').val(dept.departmentName);
+    $('#departmentStatus').val(dept.departmentStatus || 'ACTIVE');
+    $('#description').val(dept.description);
+
+    $('#formTitle').text('Update Department');
+    $('#saveBtn').text('Update Department');
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+  function deleteDepartment(id) {
+    if (confirm("Are you sure you want to delete this department?")) {
+      $.ajax({
+        url: `/v1/department/${id}`,
+        type: 'DELETE',
+        headers: headers,
+        success: function (res) {
+          alert("Department deleted successfully!");
+          loadAllDepartments();
+        },
+        error: function (xhr) {
+          alert("Delete failed: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    }
+  }
+
+  function resetForm() {
+    $('#departmentForm')[0].reset();
+    $('#departmentId').val('');
+    $('#formTitle').text('Add Department');
+    $('#saveBtn').text('+ Add Department');
+  }
+</script>
 
 </body>
 </html>

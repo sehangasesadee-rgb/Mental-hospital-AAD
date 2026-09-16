@@ -20,7 +20,6 @@
   </div>
 
   <div class="menu-title">Main</div>
-
   <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
   <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
   <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
@@ -28,7 +27,6 @@
   <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
 
   <div class="menu-title">Patient Care</div>
-
   <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
   <a href="discharges.html" class="nav-item"><span class="nav-icon">🚪</span><span>Discharges</span></a>
   <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
@@ -36,14 +34,12 @@
   <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
 
   <div class="menu-title">Hospital</div>
-
   <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
   <a href="wards.html" class="nav-item"><span class="nav-icon">🏨</span><span>Wards</span></a>
   <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
   <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
 
   <div class="menu-title">Administration</div>
-
   <a href="emergency-contacts.html" class="nav-item active"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
   <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
   <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
@@ -62,7 +58,7 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search contacts...">
+      <input class="search" id="searchEmergencyInput" placeholder="Search by Contact ID...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -77,50 +73,49 @@
   </div>
 
 
-  <div class="card section">
+  <!-- Add / Update Emergency Contact Form Card -->
+  <div class="card section" id="emergencyFormCard">
 
     <div class="card-header">
-      <h3>Add Emergency Contact</h3>
+      <h3 id="formTitle">Add Emergency Contact</h3>
     </div>
 
-    <form>
-
+    <form id="emergencyForm">
+      <input type="hidden" id="emergencyContactId">
       <div class="form-grid">
 
         <div class="form-group">
           <label>Patient</label>
-          <select>
-            <option>Select patient</option>
-            <option>Nethmi Silva</option>
-            <option>Ravindu Perera</option>
+          <select id="patientId" required>
+            <option value="">Select patient</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Contact Name</label>
-          <input type="text" placeholder="Enter contact name">
+          <input type="text" id="contactName" placeholder="Enter contact name" required>
         </div>
 
         <div class="form-group">
           <label>Relationship</label>
-          <input type="text" placeholder="Mother / Father / Guardian">
+          <input type="text" id="relationship" placeholder="Mother / Father / Guardian" required>
         </div>
 
         <div class="form-group">
           <label>Contact Number</label>
-          <input type="text" placeholder="07XXXXXXXX">
+          <input type="text" id="contactNumber" placeholder="07XXXXXXXX" required>
         </div>
 
         <div class="form-group full">
           <label>Address</label>
-          <textarea placeholder="Enter contact address"></textarea>
+          <textarea id="address" placeholder="Enter contact address"></textarea>
         </div>
 
       </div>
 
-      <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Save Contact</button>
+      <div class="form-actions" style="margin-top: 15px;">
+        <button type="button" class="btn btn-light" id="resetBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">+ Save Contact</button>
       </div>
 
     </form>
@@ -128,6 +123,7 @@
   </div>
 
 
+  <!-- Emergency Contact List Table -->
   <div class="card">
 
     <div class="card-header">
@@ -137,10 +133,10 @@
     <div class="table-container">
 
       <table>
-
         <thead>
         <tr>
-          <th>Patient</th>
+          <th>ID</th>
+          <th>Patient ID</th>
           <th>Contact Name</th>
           <th>Relationship</th>
           <th>Contact Number</th>
@@ -148,29 +144,9 @@
           <th>Action</th>
         </tr>
         </thead>
-
-        <tbody>
-
-<!--        <tr>-->
-<!--          <td><strong>Nethmi Silva</strong></td>-->
-<!--          <td>Sunil Silva</td>-->
-<!--          <td>Father</td>-->
-<!--          <td>071 222 3344</td>-->
-<!--          <td>Kalutara</td>-->
-<!--          <td><button class="btn btn-light">Edit</button></td>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--          <td><strong>Ravindu Perera</strong></td>-->
-<!--          <td>Malini Perera</td>-->
-<!--          <td>Mother</td>-->
-<!--          <td>077 333 4455</td>-->
-<!--          <td>Colombo</td>-->
-<!--          <td><button class="btn btn-light">Edit</button></td>-->
-<!--        </tr>-->
-
+        <tbody id="emergencyTableBody">
+        <!-- Loaded dynamically via AJAX -->
         </tbody>
-
       </table>
 
     </div>
@@ -178,6 +154,158 @@
   </div>
 
 </main>
+
+<!-- jQuery Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  const token = localStorage.getItem("authToken");
+  const headers = { "Authorization": "Bearer " + token };
+
+  $(document).ready(function () {
+    loadPatientsDropdown();
+    loadAllEmergencyContacts();
+
+    // Reset Form
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+    // Save or Update Form Submit
+    $('#emergencyForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const ecId = $('#emergencyContactId').val();
+      const emergencyData = {
+        emergencyContactId: ecId ? parseInt(ecId) : null,
+        patientId: parseInt($('#patientId').val()),
+        contactName: $('#contactName').val().trim(),
+        relationship: $('#relationship').val().trim(),
+        contactNumber: $('#contactNumber').val().trim(),
+        address: $('#address').val().trim()
+      };
+
+      const isUpdate = !!ecId;
+      const url = '/v1/emergencyContact';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: headers,
+        data: JSON.stringify(emergencyData),
+        success: function (res) {
+          if (res.status === 0 || res.statusCode === 200 || res.code === "00") {
+            alert(isUpdate ? "Emergency contact updated successfully!" : "Emergency contact saved successfully!");
+            resetForm();
+            loadAllEmergencyContacts();
+          } else {
+            alert(res.message || "Operation failed.");
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    });
+
+    // Filter/Search by Emergency Contact ID (hides add form during search)
+    $('#searchEmergencyInput').on('input', function () {
+      const query = $(this).val().trim();
+      if (query === '') {
+        $('#emergencyFormCard').show(); // Show form back when search input is cleared
+        loadAllEmergencyContacts();
+      } else {
+        $('#emergencyFormCard').hide(); // Hide form so results stand out
+        $.ajax({
+          url: `/v1/emergencyContact/filter?emergency_contacts_id=${encodeURIComponent(query)}`,
+          type: 'GET',
+          headers: headers,
+          success: function (res) {
+            renderEmergencyContacts(res.body || []);
+          },
+          error: function () {
+            $('#emergencyTableBody').html('<tr><td colspan="7" style="text-align:center; color:gray;">No emergency contacts found.</td></tr>');
+          }
+        });
+      }
+    });
+  });
+
+  function loadPatientsDropdown() {
+    $.ajax({
+      url: '/v1/patients',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        const patientSelect = $('#patientId');
+        patientSelect.empty().append('<option value="">Select patient</option>');
+        const patients = res.body || [];
+        patients.forEach(pat => {
+          patientSelect.append(`<option value="${pat.patientId}">[ID: ${pat.patientId}] ${pat.patientName}</option>`);
+        });
+      }
+    });
+  }
+
+  function loadAllEmergencyContacts() {
+    $.ajax({
+      url: '/v1/emergencyContact',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        renderEmergencyContacts(res.body || []);
+      }
+    });
+  }
+
+  function renderEmergencyContacts(contacts) {
+    const tbody = $('#emergencyTableBody');
+    tbody.empty();
+
+    if (!contacts || contacts.length === 0) {
+      tbody.html('<tr><td colspan="7" style="text-align:center; color:gray; padding: 20px;">No emergency contacts found.</td></tr>');
+      return;
+    }
+
+    contacts.forEach(ec => {
+      const row = `
+        <tr>
+          <td>${ec.emergencyContactId}</td>
+          <td><strong>${ec.patientId}</strong></td>
+          <td>${ec.contactName}</td>
+          <td>${ec.relationship}</td>
+          <td>${ec.contactNumber}</td>
+          <td>${ec.address || '-'}</td>
+          <td>
+            <button class="btn btn-light" style="padding: 2px 8px; font-size: 11px;" onclick='editEmergencyContact(${JSON.stringify(ec)})'>Edit</button>
+          </td>
+        </tr>
+      `;
+      tbody.append(row);
+    });
+  }
+
+  function editEmergencyContact(ec) {
+    $('#emergencyContactId').val(ec.emergencyContactId);
+    $('#patientId').val(ec.patientId);
+    $('#contactName').val(ec.contactName);
+    $('#relationship').val(ec.relationship);
+    $('#contactNumber').val(ec.contactNumber);
+    $('#address').val(ec.address);
+
+    $('#formTitle').text('Update Emergency Contact');
+    $('#saveBtn').text('Update Contact');
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+  function resetForm() {
+    $('#emergencyForm')[0].reset();
+    $('#emergencyContactId').val('');
+    $('#formTitle').text('Add Emergency Contact');
+    $('#saveBtn').text('+ Save Contact');
+  }
+</script>
 
 </body>
 </html>

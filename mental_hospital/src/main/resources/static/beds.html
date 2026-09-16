@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindCare - Beds</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .card-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -20,7 +27,6 @@
   </div>
 
   <div class="menu-title">Main</div>
-
   <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
   <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
   <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
@@ -28,7 +34,6 @@
   <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
 
   <div class="menu-title">Patient Care</div>
-
   <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
   <a href="discharges.html" class="nav-item"><span class="nav-icon">🚪</span><span>Discharges</span></a>
   <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
@@ -36,14 +41,12 @@
   <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
 
   <div class="menu-title">Hospital</div>
-
   <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
   <a href="wards.html" class="nav-item"><span class="nav-icon">🏨</span><span>Wards</span></a>
   <a href="beds.html" class="nav-item active"><span class="nav-icon">🛏️</span><span>Beds</span></a>
   <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
 
   <div class="menu-title">Administration</div>
-
   <a href="emergency-contacts.html" class="nav-item"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
   <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
   <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
@@ -62,7 +65,7 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search beds...">
+      <input class="search" id="searchBedInput" placeholder="Search beds by number...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -77,55 +80,53 @@
   </div>
 
 
-  <div class="card section">
+  <!-- Add/Update Bed Form Section (Will hide or minimize during search if needed, or structured neatly) -->
+  <div class="card section" id="bedFormCard">
 
     <div class="card-header">
-      <h3>Add Bed</h3>
+      <h3 id="formTitle">Add Bed</h3>
     </div>
 
-    <form>
-
+    <form id="bedForm">
+      <input type="hidden" id="bedId">
       <div class="form-grid">
 
         <div class="form-group">
           <label>Bed Number</label>
-          <input type="text" placeholder="e.g. B-101">
+          <input type="text" id="bedNumber" placeholder="e.g. B-101" required>
         </div>
 
         <div class="form-group">
           <label>Bed Type</label>
-          <select>
-            <option>Select bed type</option>
-            <option>Single</option>
-            <option>Private</option>
-            <option>General</option>
+          <select id="bedType" required>
+            <option value="">Select bed type</option>
+            <option value="Single">Single</option>
+            <option value="Private">Private</option>
+            <option value="General">General</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Ward</label>
-          <select>
-            <option>Select ward</option>
-            <option>Female Ward</option>
-            <option>Male Ward</option>
-            <option>General Ward</option>
+          <select id="wardId" required>
+            <option value="">Select ward</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Bed Status</label>
-          <select>
-            <option>AVAILABLE</option>
-            <option>OCCUPIED</option>
-            <option>MAINTENANCE</option>
+          <select id="bedStatus" required>
+            <option value="AVAILABLE">AVAILABLE</option>
+            <option value="OCCUPIED">OCCUPIED</option>
+            <option value="MAINTENANCE">MAINTENANCE</option>
           </select>
         </div>
 
       </div>
 
-      <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Add Bed</button>
+      <div class="form-actions" style="margin-top: 15px;">
+        <button type="button" class="btn btn-light" id="resetBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">+ Add Bed</button>
       </div>
 
     </form>
@@ -133,65 +134,192 @@
   </div>
 
 
+  <!-- Beds List Section -->
   <div class="card">
 
     <div class="card-header">
-
-      <h3>Bed Availability</h3>
-
+      <h3>Bed Availability & Management</h3>
       <div>
         <span class="badge badge-success">Available</span>
         <span class="badge badge-danger">Occupied</span>
         <span class="badge badge-warning">Maintenance</span>
       </div>
-
     </div>
 
-
-    <h4 style="font-size:13px;margin-bottom:15px">
-      Female Ward
-    </h4>
-
-    <div class="bed-grid">
-
-      <div class="bed available">B-101<br>Available</div>
-      <div class="bed occupied">B-102<br>Occupied</div>
-      <div class="bed occupied">B-103<br>Occupied</div>
-      <div class="bed available">B-104<br>Available</div>
-      <div class="bed maintenance">B-105<br>Maintenance</div>
-
-      <div class="bed occupied">B-106<br>Occupied</div>
-      <div class="bed available">B-107<br>Available</div>
-      <div class="bed occupied">B-108<br>Occupied</div>
-      <div class="bed available">B-109<br>Available</div>
-      <div class="bed occupied">B-110<br>Occupied</div>
-
-    </div>
-
-
-    <h4 style="font-size:13px;margin:25px 0 15px">
-      Male Ward
-    </h4>
-
-    <div class="bed-grid">
-
-      <div class="bed occupied">B-201<br>Occupied</div>
-      <div class="bed available">B-202<br>Available</div>
-      <div class="bed occupied">B-203<br>Occupied</div>
-      <div class="bed available">B-204<br>Available</div>
-      <div class="bed occupied">B-205<br>Occupied</div>
-
-      <div class="bed available">B-206<br>Available</div>
-      <div class="bed occupied">B-207<br>Occupied</div>
-      <div class="bed available">B-208<br>Available</div>
-      <div class="bed maintenance">B-209<br>Maintenance</div>
-      <div class="bed available">B-210<br>Available</div>
-
+    <!-- Dynamic Beds Grid -->
+    <div class="bed-grid" id="bedGrid" style="margin-top: 20px;">
+      <!-- Loaded dynamically via AJAX -->
     </div>
 
   </div>
 
 </main>
+
+<!-- jQuery Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  const token = localStorage.getItem("authToken");
+  const headers = { "Authorization": "Bearer " + token };
+
+  $(document).ready(function () {
+    loadWards();
+    loadAllBeds();
+
+    // Reset Form
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+    // Save or Update Form Submit
+    $('#bedForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const bId = $('#bedId').val();
+      const bedData = {
+        bedId: bId ? parseInt(bId) : null,
+        bedNumber: $('#bedNumber').val().trim(),
+        bedType: $('#bedType').val(),
+        wardId: parseInt($('#wardId').val()),
+        bedStatus: $('#bedStatus').val()
+      };
+
+      const isUpdate = !!bId;
+      const url = '/v1/beds';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: headers,
+        data: JSON.stringify(bedData),
+        success: function (res) {
+          if (res.status === 0 || res.statusCode === 200 || res.code === "00") {
+            alert(isUpdate ? "Bed updated successfully!" : "Bed added successfully!");
+            resetForm();
+            loadAllBeds();
+          } else {
+            alert(res.message || "Operation failed.");
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    });
+
+    // Live Search with Form Toggle (Hide add form when searching to highlight results cleanly)
+    $('#searchBedInput').on('input', function () {
+      const query = $(this).val().trim();
+      if (query === '') {
+        $('#bedFormCard').show(); // Show form back when search is cleared
+        loadAllBeds();
+      } else {
+        $('#bedFormCard').hide(); // Hide add form so search results take focus nicely
+        $.ajax({
+          url: `/v1/beds/filter?bedNumber=${encodeURIComponent(query)}`,
+          type: 'GET',
+          headers: headers,
+          success: function (res) {
+            renderBeds(res.body || []);
+          }
+        });
+      }
+    });
+  });
+
+  function loadWards() {
+    $.ajax({
+      url: '/v1/wards',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        const wardSelect = $('#wardId');
+        wardSelect.empty().append('<option value="">Select ward</option>');
+        const wards = res.body || [];
+        wards.forEach(ward => {
+          wardSelect.append(`<option value="${ward.wardId}">${ward.wardName} (${ward.wardType})</option>`);
+        });
+      }
+    });
+  }
+
+  function loadAllBeds() {
+    $.ajax({
+      url: '/v1/beds',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        renderBeds(res.body || []);
+      }
+    });
+  }
+
+  function renderBeds(beds) {
+    const grid = $('#bedGrid');
+    grid.empty();
+
+    if (!beds || beds.length === 0) {
+      grid.html('<p style="grid-column: 1/-1; text-align:center; color:gray; padding: 20px;">No beds found.</p>');
+      return;
+    }
+
+    beds.forEach(bed => {
+      let statusClass = 'available';
+      if (bed.bedStatus === 'OCCUPIED') statusClass = 'occupied';
+      if (bed.bedStatus === 'MAINTENANCE') statusClass = 'maintenance';
+
+      const bedCard = `
+        <div class="bed ${statusClass}" style="position: relative; padding: 15px; border-radius: 8px; cursor: pointer;">
+          <strong>${bed.bedNumber}</strong><br>
+          <span style="font-size: 10px;">Type: ${bed.bedType}</span><br>
+          <span style="font-size: 10px;">Status: ${bed.bedStatus}</span>
+          <div style="margin-top: 8px; display: flex; gap: 5px;">
+            <button class="btn btn-light" style="font-size: 9px; padding: 2px 6px;" onclick='editBed(${JSON.stringify(bed)})'>Edit</button>
+            <button class="btn btn-primary" style="font-size: 9px; padding: 2px 6px; background:#dc3545; border-color:#dc3545;" onclick="deleteBed(${bed.bedId})">Del</button>
+          </div>
+        </div>
+      `;
+      grid.append(bedCard);
+    });
+  }
+
+  function editBed(bed) {
+    $('#bedId').val(bed.bedId);
+    $('#bedNumber').val(bed.bedNumber);
+    $('#bedType').val(bed.bedType);
+    $('#wardId').val(bed.wardId);
+    $('#bedStatus').val(bed.bedStatus);
+
+    $('#formTitle').text('Update Bed');
+    $('#saveBtn').text('Update Bed');
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+  function deleteBed(id) {
+    if (confirm("Are you sure you want to delete this bed?")) {
+      $.ajax({
+        url: `/v1/beds/${id}`,
+        type: 'DELETE',
+        headers: headers,
+        success: function (res) {
+          alert("Bed deleted successfully!");
+          loadAllBeds();
+        },
+        error: function (xhr) {
+          alert("Delete failed: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    }
+  }
+
+  function resetForm() {
+    $('#bedForm')[0].reset();
+    $('#bedId').val('');
+    $('#formTitle').text('Add Bed');
+    $('#saveBtn').text('+ Add Bed');
+  }
+</script>
 
 </body>
 </html>

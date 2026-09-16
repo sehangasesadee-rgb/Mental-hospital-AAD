@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MindCare - AI Chatbot</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 850px;
+            height: 650px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 45px rgba(79, 70, 229, 0.18);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bot-icon {
+            width: 55px;
+            height: 55px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .header-text h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            background: #fafaff;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 14px 17px;
+            margin-bottom: 16px;
+            border-radius: 16px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .bot-message {
+            background: #ede9fe;
+            color: #312e81;
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+
+        .user-message {
+            background: #4f46e5;
+            color: white;
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+
+        .chat-input-area {
+            padding: 18px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        #messageInput {
+            flex: 1;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        #messageInput:focus {
+            border-color: #6366f1;
+        }
+
+        #sendButton {
+            border: none;
+            border-radius: 14px;
+            padding: 0 24px;
+            background: #4f46e5;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #sendButton:hover {
+            background: #4338ca;
+        }
+
+        .disclaimer {
+            margin-top: 10px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 90vh;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            #sendButton {
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <div class="chat-header">
+        <div class="bot-icon">🤖</div>
+
+        <div class="header-text">
+            <h2>MindCare AI Assistant</h2>
+            <p>💜 A safe space to talk</p>
+        </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+
+        <div class="message bot-message">
+            Hello! 👋 Welcome to MindCare.
+            <br><br>
+            You can talk to me about how you feel.
+            I'm here to listen and provide general support.
+        </div>
+
+    </div>
+
+    <div class="chat-input-area">
+
+        <div class="input-wrapper">
+            <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="Type your message..."
+                    autocomplete="off">
+
+            <button id="sendButton">Send</button>
+        </div>
+
+        <p class="disclaimer">
+            This AI assistant provides general support and is not a replacement for a mental health professional.
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+    const chatMessages = document.getElementById("chatMessages");
+
+    function addMessage(message, sender) {
+
+        const messageDiv = document.createElement("div");
+
+        messageDiv.classList.add("message");
+
+        if (sender === "user") {
+            messageDiv.classList.add("user-message");
+        } else {
+            messageDiv.classList.add("bot-message");
+        }
+
+        messageDiv.textContent = message;
+
+        chatMessages.appendChild(messageDiv);
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function sendMessage() {
+
+        const message = messageInput.value.trim();
+
+        if (message === "") {
+            return;
+        }
+
+        addMessage(message, "user");
+
+        messageInput.value = "";
+
+        // Temporary response
+        addMessage(
+            "Thank you for sharing. AI connection will be added in the next step. 💜",
+            "bot"
+        );
+    }
+
+    sendButton.addEventListener("click", sendMessage);
+
+    messageInput.addEventListener("keypress", function (event) {
+
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

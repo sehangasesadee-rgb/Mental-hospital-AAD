@@ -20,7 +20,6 @@
   </div>
 
   <div class="menu-title">Main</div>
-
   <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
   <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
   <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
@@ -28,7 +27,6 @@
   <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
 
   <div class="menu-title">Patient Care</div>
-
   <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
   <a href="discharges.html" class="nav-item"><span class="nav-icon">🚪</span><span>Discharges</span></a>
   <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
@@ -36,14 +34,12 @@
   <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
 
   <div class="menu-title">Hospital</div>
-
   <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
   <a href="wards.html" class="nav-item"><span class="nav-icon">🏨</span><span>Wards</span></a>
   <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
   <a href="medications.html" class="nav-item active"><span class="nav-icon">💊</span><span>Medications</span></a>
 
   <div class="menu-title">Administration</div>
-
   <a href="emergency-contacts.html" class="nav-item"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
   <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
   <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
@@ -62,7 +58,7 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search medications...">
+      <input class="search" id="searchMedicationInput" placeholder="Search by Medication ID...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -78,95 +74,64 @@
 
 
   <div class="stats-grid">
-
     <div class="stat-card">
       <div class="stat-top">
         <div>
           <p>Total Medicines</p>
-          <h2>128</h2>
+          <h2 id="totalMedCount">0</h2>
         </div>
         <div class="stat-icon purple">💊</div>
       </div>
     </div>
-
-    <div class="stat-card">
-      <div class="stat-top">
-        <div>
-          <p>Available</p>
-          <h2>104</h2>
-        </div>
-        <div class="stat-icon green">✓</div>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-top">
-        <div>
-          <p>Low Stock</p>
-          <h2>16</h2>
-        </div>
-        <div class="stat-icon orange">!</div>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-top">
-        <div>
-          <p>Out of Stock</p>
-          <h2>8</h2>
-        </div>
-        <div class="stat-icon blue">×</div>
-      </div>
-    </div>
-
   </div>
 
 
-  <div class="card section">
+  <!-- Add / Update Medication Form Section -->
+  <div class="card section" id="medicationFormCard">
 
     <div class="card-header">
-      <h3>Add Medication</h3>
+      <h3 id="formTitle">Add Medication</h3>
     </div>
 
-    <form>
-
+    <form id="medicationForm">
+      <input type="hidden" id="medicationId">
       <div class="form-grid">
 
         <div class="form-group">
           <label>Medication Name</label>
-          <input type="text" placeholder="Enter medication name">
+          <input type="text" id="medicationName" placeholder="Enter medication name" required>
         </div>
 
         <div class="form-group">
           <label>Dosage</label>
-          <input type="text" placeholder="e.g. 10mg">
+          <input type="text" id="dosage" placeholder="e.g. 10mg" required>
         </div>
 
         <div class="form-group">
           <label>Quantity</label>
-          <input type="number" placeholder="Enter quantity">
+          <input type="number" id="quantity" placeholder="Enter quantity" required>
         </div>
 
         <div class="form-group">
           <label>Medication Status</label>
-          <select>
-            <option>AVAILABLE</option>
-            <option>LOW_STOCK</option>
-            <option>OUT_OF_STOCK</option>
-            <option>INACTIVE</option>
+          <select id="medicationStatus" required>
+            <option value="AVAILABLE">AVAILABLE</option>
+            <option value="LOW_STOCK">LOW_STOCK</option>
+            <option value="OUT_OF_STOCK">OUT_OF_STOCK</option>
+            <option value="INACTIVE">INACTIVE</option>
           </select>
         </div>
 
         <div class="form-group full">
           <label>Description</label>
-          <textarea placeholder="Enter medication description"></textarea>
+          <textarea id="description" placeholder="Enter medication description"></textarea>
         </div>
 
       </div>
 
-      <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Add Medication</button>
+      <div class="form-actions" style="margin-top: 15px;">
+        <button type="button" class="btn btn-light" id="resetBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">+ Add Medication</button>
       </div>
 
     </form>
@@ -174,6 +139,7 @@
   </div>
 
 
+  <!-- Medication Inventory Table Section -->
   <div class="card">
 
     <div class="card-header">
@@ -183,9 +149,9 @@
     <div class="table-container">
 
       <table>
-
         <thead>
         <tr>
+          <th>ID</th>
           <th>Medication</th>
           <th>Dosage</th>
           <th>Quantity</th>
@@ -194,29 +160,9 @@
           <th>Action</th>
         </tr>
         </thead>
-
-        <tbody>
-
-<!--        <tr>-->
-<!--          <td><strong>Medication A</strong></td>-->
-<!--          <td>10mg</td>-->
-<!--          <td>120</td>-->
-<!--          <td>Regular prescription medication</td>-->
-<!--          <td><span class="badge badge-success">Available</span></td>-->
-<!--          <td><button class="btn btn-light">Edit</button></td>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--          <td><strong>Medication B</strong></td>-->
-<!--          <td>20mg</td>-->
-<!--          <td>18</td>-->
-<!--          <td>Requires monitoring</td>-->
-<!--          <td><span class="badge badge-warning">Low Stock</span></td>-->
-<!--          <td><button class="btn btn-light">Edit</button></td>-->
-<!--        </tr>-->
-
+        <tbody id="medicationTableBody">
+        <!-- Loaded dynamically via AJAX -->
         </tbody>
-
       </table>
 
     </div>
@@ -224,6 +170,147 @@
   </div>
 
 </main>
+
+<!-- jQuery Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  const token = localStorage.getItem("authToken");
+  const headers = { "Authorization": "Bearer " + token };
+
+  $(document).ready(function () {
+    loadAllMedications();
+
+    // Reset Form Button
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+    // Save or Update Form Submit
+    $('#medicationForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const mId = $('#medicationId').val();
+      const medicationData = {
+        medicationId: mId ? parseInt(mId) : null,
+        medicationName: $('#medicationName').val().trim(),
+        dosage: $('#dosage').val().trim(),
+        quantity: parseInt($('#quantity').val()),
+        medicationStatus: $('#medicationStatus').val(),
+        description: $('#description').val().trim()
+      };
+
+      const isUpdate = !!mId;
+      const url = '/v1/medication';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: headers,
+        data: JSON.stringify(medicationData),
+        success: function (res) {
+          if (res.status === 0 || res.statusCode === 200 || res.code === "00") {
+            alert(isUpdate ? "Medication updated successfully!" : "Medication added successfully!");
+            resetForm();
+            loadAllMedications();
+          } else {
+            alert(res.message || "Operation failed.");
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    });
+
+    // Filter/Search by Medication ID (hides add form during search for neat layout)
+    $('#searchMedicationInput').on('input', function () {
+      const query = $(this).val().trim();
+      if (query === '') {
+        $('#medicationFormCard').show(); // Show form back when search is cleared
+        loadAllMedications();
+      } else {
+        $('#medicationFormCard').hide(); // Hide form so search table takes center stage
+        $.ajax({
+          url: `/v1/medication/filter?Medication_id=${encodeURIComponent(query)}`,
+          type: 'GET',
+          headers: headers,
+          success: function (res) {
+            renderMedications(res.body || []);
+          },
+          error: function () {
+            $('#medicationTableBody').html('<tr><td colspan="7" style="text-align:center; color:gray;">No medications found.</td></tr>');
+          }
+        });
+      }
+    });
+  });
+
+  function loadAllMedications() {
+    $.ajax({
+      url: '/v1/medication',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        const meds = res.body || [];
+        $('#totalMedCount').text(meds.length);
+        renderMedications(meds);
+      }
+    });
+  }
+
+  function renderMedications(medications) {
+    const tbody = $('#medicationTableBody');
+    tbody.empty();
+
+    if (!medications || medications.length === 0) {
+      tbody.html('<tr><td colspan="7" style="text-align:center; color:gray; padding: 20px;">No medications found.</td></tr>');
+      return;
+    }
+
+    medications.forEach(med => {
+      let badgeClass = 'badge-success';
+      if (med.medicationStatus === 'LOW_STOCK') badgeClass = 'badge-warning';
+      if (med.medicationStatus === 'OUT_OF_STOCK' || med.medicationStatus === 'INACTIVE') badgeClass = 'badge-danger';
+
+      const row = `
+        <tr>
+          <td>${med.medicationId}</td>
+          <td><strong>${med.medicationName}</strong></td>
+          <td>${med.dosage}</td>
+          <td>${med.quantity}</td>
+          <td>${med.description || '-'}</td>
+          <td><span class="badge ${badgeClass}">${med.medicationStatus}</span></td>
+          <td>
+            <button class="btn btn-light" style="padding: 2px 8px; font-size: 11px;" onclick='editMedication(${JSON.stringify(med)})'>Edit</button>
+          </td>
+        </tr>
+      `;
+      tbody.append(row);
+    });
+  }
+
+  function editMedication(med) {
+    $('#medicationId').val(med.medicationId);
+    $('#medicationName').val(med.medicationName);
+    $('#dosage').val(med.dosage);
+    $('#quantity').val(med.quantity);
+    $('#medicationStatus').val(med.medicationStatus);
+    $('#description').val(med.description);
+
+    $('#formTitle').text('Update Medication');
+    $('#saveBtn').text('Update Medication');
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+  function resetForm() {
+    $('#medicationForm')[0].reset();
+    $('#medicationId').val('');
+    $('#formTitle').text('Add Medication');
+    $('#saveBtn').text('+ Add Medication');
+  }
+</script>
 
 </body>
 </html>

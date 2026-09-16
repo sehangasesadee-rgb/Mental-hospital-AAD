@@ -20,7 +20,6 @@
   </div>
 
   <div class="menu-title">Main</div>
-
   <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
   <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
   <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
@@ -28,7 +27,6 @@
   <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
 
   <div class="menu-title">Patient Care</div>
-
   <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
   <a href="discharges.html" class="nav-item"><span class="nav-icon">🚪</span><span>Discharges</span></a>
   <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
@@ -36,14 +34,12 @@
   <a href="prescriptions.html" class="nav-item active"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
 
   <div class="menu-title">Hospital</div>
-
   <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
   <a href="wards.html" class="nav-item"><span class="nav-icon">🏨</span><span>Wards</span></a>
   <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
   <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
 
   <div class="menu-title">Administration</div>
-
   <a href="emergency-contacts.html" class="nav-item"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
   <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
   <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
@@ -62,7 +58,7 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search prescriptions...">
+      <input class="search" id="searchPrescriptionInput" placeholder="Search by Prescription ID...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -77,73 +73,68 @@
   </div>
 
 
-  <div class="card section">
+  <!-- Create / Update Prescription Form Section -->
+  <div class="card section" id="prescriptionFormCard">
 
     <div class="card-header">
-      <h3>Create Prescription</h3>
+      <h3 id="formTitle">Create Prescription</h3>
     </div>
 
-    <form>
-
+    <form id="prescriptionForm">
+      <input type="hidden" id="prescriptionId">
       <div class="form-grid">
 
         <div class="form-group">
           <label>Patient</label>
-          <select>
-            <option>Select patient</option>
-            <option>Nethmi Silva</option>
-            <option>Ravindu Perera</option>
+          <select id="patientId" required>
+            <option value="">Select patient</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Doctor</label>
-          <select>
-            <option>Select doctor</option>
-            <option>Dr. Kasun Perera</option>
-            <option>Dr. Amali Fernando</option>
+          <select id="doctorId" required>
+            <option value="">Select doctor</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Medication</label>
-          <select>
-            <option>Select medication</option>
-            <option>Medication A</option>
-            <option>Medication B</option>
+          <select id="medicationId" required>
+            <option value="">Select medication</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Prescription Date</label>
-          <input type="date">
+          <input type="date" id="prescriptionDate" required>
         </div>
 
         <div class="form-group">
           <label>Dosage</label>
-          <input type="text" placeholder="e.g. 10mg">
+          <input type="text" id="dosage" placeholder="e.g. 10mg" required>
         </div>
 
         <div class="form-group">
           <label>Frequency</label>
-          <input type="text" placeholder="e.g. Twice daily">
+          <input type="text" id="frequency" placeholder="e.g. Twice daily" required>
         </div>
 
         <div class="form-group">
           <label>Duration Days</label>
-          <input type="number" placeholder="30">
+          <input type="number" id="durationDays" placeholder="30" required>
         </div>
 
         <div class="form-group">
           <label>Instructions</label>
-          <input type="text" placeholder="After meals">
+          <input type="text" id="instructions" placeholder="After meals">
         </div>
 
       </div>
 
-      <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Create Prescription</button>
+      <div class="form-actions" style="margin-top: 15px;">
+        <button type="button" class="btn btn-light" id="resetBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">+ Create Prescription</button>
       </div>
 
     </form>
@@ -151,6 +142,7 @@
   </div>
 
 
+  <!-- Prescription History Table Section -->
   <div class="card">
 
     <div class="card-header">
@@ -160,43 +152,22 @@
     <div class="table-container">
 
       <table>
-
         <thead>
         <tr>
-          <th>Patient</th>
-          <th>Doctor</th>
-          <th>Medication</th>
+          <th>ID</th>
+          <th>Patient ID</th>
+          <th>Doctor ID</th>
+          <th>Medication ID</th>
+          <th>Date</th>
           <th>Dosage</th>
           <th>Frequency</th>
           <th>Duration</th>
           <th>Action</th>
         </tr>
         </thead>
-
-        <tbody>
-
-<!--        <tr>-->
-<!--          <td><strong>Nethmi Silva</strong></td>-->
-<!--          <td>Dr. Kasun Perera</td>-->
-<!--          <td>Medication A</td>-->
-<!--          <td>10mg</td>-->
-<!--          <td>Twice daily</td>-->
-<!--          <td>30 days</td>-->
-<!--          <td><button class="btn btn-light">View</button></td>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--          <td><strong>Ravindu Perera</strong></td>-->
-<!--          <td>Dr. Amali Fernando</td>-->
-<!--          <td>Medication B</td>-->
-<!--          <td>20mg</td>-->
-<!--          <td>Once daily</td>-->
-<!--          <td>14 days</td>-->
-<!--          <td><button class="btn btn-light">View</button></td>-->
-<!--        </tr>-->
-
+        <tbody id="prescriptionTableBody">
+        <!-- Loaded dynamically via AJAX -->
         </tbody>
-
       </table>
 
     </div>
@@ -204,6 +175,200 @@
   </div>
 
 </main>
+
+<!-- jQuery Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  const token = localStorage.getItem("authToken");
+  const headers = { "Authorization": "Bearer " + token };
+
+  $(document).ready(function () {
+    loadPatientsDropdown();
+    loadDoctorsDropdown();
+    loadMedicationsDropdown();
+    loadAllPrescriptions();
+
+    // Reset Form
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+    // Save or Update Form Submit
+    $('#prescriptionForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const pId = $('#prescriptionId').val();
+      const prescriptionData = {
+        prescriptionId: pId ? parseInt(pId) : null,
+        patientId: parseInt($('#patientId').val()),
+        doctorId: parseInt($('#doctorId').val()),
+        medicationId: parseInt($('#medicationId').val()),
+        prescriptionDate: $('#prescriptionDate').val(),
+        dosage: $('#dosage').val().trim(),
+        frequency: $('#frequency').val().trim(),
+        durationDays: parseInt($('#durationDays').val()),
+        instructions: $('#instructions').val().trim()
+      };
+
+      const isUpdate = !!pId;
+      const url = '/v1/prescription';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: headers,
+        data: JSON.stringify(prescriptionData),
+        success: function (res) {
+          if (res.status === 0 || res.statusCode === 200 || res.code === "00") {
+            alert(isUpdate ? "Prescription updated successfully!" : "Prescription created successfully!");
+            resetForm();
+            loadAllPrescriptions();
+          } else {
+            alert(res.message || "Operation failed.");
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    });
+
+    // Filter/Search by Prescription ID (hides form during active search)
+    $('#searchPrescriptionInput').on('input', function () {
+      const query = $(this).val().trim();
+      if (query === '') {
+        $('#prescriptionFormCard').show(); // Bring form back when search is cleared
+        loadAllPrescriptions();
+      } else {
+        $('#prescriptionFormCard').hide(); // Hide form to focus on results table
+        $.ajax({
+          url: `/v1/prescription/filter?prescriptionId=${encodeURIComponent(query)}`,
+          type: 'GET',
+          headers: headers,
+          success: function (res) {
+            renderPrescriptions(res.body || []);
+          },
+          error: function () {
+            $('#prescriptionTableBody').html('<tr><td colspan="9" style="text-align:center; color:gray;">No prescriptions found.</td></tr>');
+          }
+        });
+      }
+    });
+  });
+
+  function loadPatientsDropdown() {
+    $.ajax({
+      url: '/v1/patients',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        const select = $('#patientId');
+        select.empty().append('<option value="">Select patient</option>');
+        const patients = res.body || [];
+        patients.forEach(p => {
+          select.append(`<option value="${p.patientId}">[ID: ${p.patientId}] ${p.patientName}</option>`);
+        });
+      }
+    });
+  }
+
+  function loadDoctorsDropdown() {
+    $.ajax({
+      url: '/v1/doctors',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        const select = $('#doctorId');
+        select.empty().append('<option value="">Select doctor</option>');
+        const doctors = res.body || [];
+        doctors.forEach(d => {
+          select.append(`<option value="${d.doctorId}">[ID: ${d.doctorId}] ${d.doctorName}</option>`);
+        });
+      }
+    });
+  }
+
+  function loadMedicationsDropdown() {
+    $.ajax({
+      url: '/v1/medication',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        const select = $('#medicationId');
+        select.empty().append('<option value="">Select medication</option>');
+        const meds = res.body || [];
+        meds.forEach(m => {
+          select.append(`<option value="${m.medicationId}">[ID: ${m.medicationId}] ${m.medicationName} (${m.dosage})</option>`);
+        });
+      }
+    });
+  }
+
+  function loadAllPrescriptions() {
+    $.ajax({
+      url: '/v1/prescription',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        renderPrescriptions(res.body || []);
+      }
+    });
+  }
+
+  function renderPrescriptions(prescriptions) {
+    const tbody = $('#prescriptionTableBody');
+    tbody.empty();
+
+    if (!prescriptions || prescriptions.length === 0) {
+      tbody.html('<tr><td colspan="9" style="text-align:center; color:gray; padding: 20px;">No prescriptions found.</td></tr>');
+      return;
+    }
+
+    prescriptions.forEach(p => {
+      const row = `
+        <tr>
+          <td>${p.prescriptionId}</td>
+          <td>${p.patientId}</td>
+          <td>${p.doctorId}</td>
+          <td>${p.medicationId}</td>
+          <td>${p.prescriptionDate || '-'}</td>
+          <td>${p.dosage}</td>
+          <td>${p.frequency}</td>
+          <td>${p.durationDays} days</td>
+          <td>
+            <button class="btn btn-light" style="padding: 2px 8px; font-size: 11px;" onclick='editPrescription(${JSON.stringify(p)})'>Edit</button>
+          </td>
+        </tr>
+      `;
+      tbody.append(row);
+    });
+  }
+
+  function editPrescription(p) {
+    $('#prescriptionId').val(p.prescriptionId);
+    $('#patientId').val(p.patientId);
+    $('#doctorId').val(p.doctorId);
+    $('#medicationId').val(p.medicationId);
+    $('#prescriptionDate').val(p.prescriptionDate);
+    $('#dosage').val(p.dosage);
+    $('#frequency').val(p.frequency);
+    $('#durationDays').val(p.durationDays);
+    $('#instructions').val(p.instructions);
+
+    $('#formTitle').text('Update Prescription');
+    $('#saveBtn').text('Update Prescription');
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+  function resetForm() {
+    $('#prescriptionForm')[0].reset();
+    $('#prescriptionId').val('');
+    $('#formTitle').text('Create Prescription');
+    $('#saveBtn').text('+ Create Prescription');
+  }
+</script>
 
 </body>
 </html>

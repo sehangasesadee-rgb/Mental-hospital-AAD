@@ -62,7 +62,8 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search diagnoses...">
+      <!-- Search input with ID for filtering by patientId -->
+      <input type="text" id="searchDiagnosisInput" class="search" placeholder="Search diagnoses by Patient ID...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -77,54 +78,53 @@
   </div>
 
 
-  <div class="card section">
+  <!-- Form Card with ID to hide/show during search -->
+  <div class="card section" id="diagnosisFormCard">
 
     <div class="card-header">
-      <h3>Add Diagnosis</h3>
+      <h3 id="formTitle">Add Diagnosis</h3>
     </div>
 
-    <form>
+    <form id="diagnosisForm">
+      <!-- Hidden Input for Update (DiagnosisId) -->
+      <input type="hidden" id="diagnosisId">
 
       <div class="form-grid">
 
         <div class="form-group">
           <label>Patient</label>
-          <select>
-            <option>Select patient</option>
-            <option>Nethmi Silva</option>
-            <option>Ravindu Perera</option>
+          <select id="patientId" required>
+            <option value="">Select patient</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Doctor</label>
-          <select>
-            <option>Select doctor</option>
-            <option>Dr. Kasun Perera</option>
-            <option>Dr. Amali Fernando</option>
+          <select id="doctorId" required>
+            <option value="">Select doctor</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Diagnosis Name</label>
-          <input type="text" placeholder="Enter diagnosis">
+          <input type="text" id="diagnosisName" placeholder="Enter diagnosis" required>
         </div>
 
         <div class="form-group">
           <label>Diagnosis Date</label>
-          <input type="date">
+          <input type="date" id="diagnosisDate" required>
         </div>
 
         <div class="form-group full">
           <label>Description</label>
-          <textarea placeholder="Enter diagnosis details"></textarea>
+          <textarea id="description" placeholder="Enter diagnosis details"></textarea>
         </div>
 
       </div>
 
       <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Save Diagnosis</button>
+        <button type="reset" id="resetBtn" class="btn btn-light">Clear</button>
+        <button type="submit" id="saveBtn" class="btn btn-primary">+ Save Diagnosis</button>
       </div>
 
     </form>
@@ -153,44 +153,9 @@
         </tr>
         </thead>
 
-        <tbody>
-
-<!--        <tr>-->
-<!--          <td>-->
-<!--            <div class="patient-cell">-->
-<!--              <div class="small-avatar">NS</div>-->
-<!--              <strong>Nethmi Silva</strong>-->
-<!--            </div>-->
-<!--          </td>-->
-
-<!--          <td>Generalized Anxiety</td>-->
-<!--          <td>Dr. Kasun Perera</td>-->
-<!--          <td>2026-09-02</td>-->
-<!--          <td>Regular clinical assessment</td>-->
-
-<!--          <td>-->
-<!--            <button class="btn btn-light">View</button>-->
-<!--          </td>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--          <td>-->
-<!--            <div class="patient-cell">-->
-<!--              <div class="small-avatar">RP</div>-->
-<!--              <strong>Ravindu Perera</strong>-->
-<!--            </div>-->
-<!--          </td>-->
-
-<!--          <td>Depressive Disorder</td>-->
-<!--          <td>Dr. Amali Fernando</td>-->
-<!--          <td>2026-09-04</td>-->
-<!--          <td>Initial evaluation</td>-->
-
-<!--          <td>-->
-<!--            <button class="btn btn-light">View</button>-->
-<!--          </td>-->
-<!--        </tr>-->
-
+        <!-- Table Body with ID for dynamic rendering -->
+        <tbody id="diagnosisTableBody">
+        <!-- Dynamic Rows will load here -->
         </tbody>
 
       </table>
@@ -200,6 +165,328 @@
   </div>
 
 </main>
+
+
+<!-- jQuery Scripting -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+
+  // Global Maps to hold names for ID mapping
+  let patientsMap = {};
+  let doctorsMap = {};
+
+  // ==============================
+  // GET CURRENT JWT TOKEN
+  // ==============================
+  function getAuthHeaders() {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      alert("Session expired. Please login again.");
+      window.location.href = "login.html";
+      return {};
+    }
+
+    return {
+      "Authorization": "Bearer " + token
+    };
+  }
+
+
+  // ==============================
+  // PAGE LOAD
+  // ==============================
+  $(document).ready(function () {
+
+    loadPatientDropdown();
+    loadDoctorDropdown();
+    loadAllDiagnoses();
+
+
+    // ==============================
+    // RESET BUTTON
+    // ==============================
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+
+    // ==============================
+    // SAVE / UPDATE DIAGNOSIS
+    // ==============================
+    $('#diagnosisForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const dId = $('#diagnosisId').val();
+      const patientId = $('#patientId').val();
+      const doctorId = $('#doctorId').val();
+      const diagnosisName = $('#diagnosisName').val().trim();
+      const diagnosisDate = $('#diagnosisDate').val();
+      const description = $('#description').val().trim();
+
+
+      // Validation
+      if (!patientId) {
+        alert("Please select a patient.");
+        return;
+      }
+      if (!doctorId) {
+        alert("Please select a doctor.");
+        return;
+      }
+      if (!diagnosisName) {
+        alert("Please enter diagnosis name.");
+        return;
+      }
+      if (!diagnosisDate) {
+        alert("Please select a diagnosis date.");
+        return;
+      }
+
+
+      const diagnosisData = {
+        diagnosisId: dId ? parseInt(dId) : null,
+        diagnosisName: diagnosisName,
+        description: description,
+        diagnosisDate: diagnosisDate,
+        patientId: parseInt(patientId),
+        doctorId: parseInt(doctorId)
+      };
+
+      const isUpdate = !!dId;
+      const url = '/v1/diagnosis';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: getAuthHeaders(),
+        data: JSON.stringify(diagnosisData),
+
+        success: function (res) {
+          alert(isUpdate ? "Diagnosis updated successfully!" : "Diagnosis created successfully!");
+          resetForm();
+          loadAllDiagnoses();
+        },
+
+        error: function (xhr) {
+          alert("Error: " + xhr.status + "\n" + xhr.responseText);
+        }
+      });
+
+    });
+
+
+    // ==============================
+    // SEARCH / FILTER DIAGNOSIS
+    // ==============================
+    $('#searchDiagnosisInput').on('input', function () {
+      const query = $(this).val().trim();
+
+      if (query === '') {
+        $('#diagnosisFormCard').show(); // Show form when search is empty
+        loadAllDiagnoses();
+        return;
+      }
+
+      $('#diagnosisFormCard').hide(); // Hide form during search
+
+      $.ajax({
+        url: `/v1/diagnosis/filter?patientId=${encodeURIComponent(query)}`,
+        type: 'GET',
+        headers: getAuthHeaders(),
+
+        success: function (res) {
+          renderDiagnoses(res.body || []);
+        },
+
+        error: function (xhr) {
+          $('#diagnosisTableBody').html(
+                  '<tr>' +
+                  '<td colspan="6" style="text-align:center; color:gray; padding:20px;">' +
+                  'No diagnoses found.' +
+                  '</td>' +
+                  '</tr>'
+          );
+        }
+      });
+
+    });
+
+  });
+
+
+
+  // ==============================
+  // LOAD PATIENT DROPDOWN
+  // ==============================
+  function loadPatientDropdown() {
+    $.ajax({
+      url: '/v1/patients',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#patientId');
+        select.empty();
+        select.append('<option value="">Select patient</option>');
+
+        const patients = res.body || [];
+        patients.forEach(function (p) {
+          patientsMap[p.patientId] = p.patientName;
+          select.append(`<option value="${p.patientId}">${p.patientName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load patients");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD DOCTOR DROPDOWN
+  // ==============================
+  function loadDoctorDropdown() {
+    $.ajax({
+      url: '/v1/doctors',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#doctorId');
+        select.empty();
+        select.append('<option value="">Select doctor</option>');
+
+        const doctors = res.body || [];
+        doctors.forEach(function (d) {
+          doctorsMap[d.doctorId] = d.doctorName;
+          select.append(`<option value="${d.doctorId}">${d.doctorName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load doctors");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD ALL DIAGNOSES
+  // ==============================
+  function loadAllDiagnoses() {
+    $.ajax({
+      url: '/v1/diagnosis',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        renderDiagnoses(res.body || []);
+      },
+
+      error: function (xhr) {
+        $('#diagnosisTableBody').html(
+                '<tr>' +
+                '<td colspan="6" style="text-align:center; color:red; padding:20px;">' +
+                'Failed to load diagnoses.' +
+                '</td>' +
+                '</tr>'
+        );
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // RENDER DIAGNOSES TABLE
+  // ==============================
+  function renderDiagnoses(diagnoses) {
+    const tbody = $('#diagnosisTableBody');
+    tbody.empty();
+
+    if (!diagnoses || diagnoses.length === 0) {
+      tbody.html(
+              '<tr>' +
+              '<td colspan="6" style="text-align:center; color:gray; padding:20px;">' +
+              'No diagnoses found.' +
+              '</td>' +
+              '</tr>'
+      );
+      return;
+    }
+
+    diagnoses.forEach(function (d) {
+      const patientName = patientsMap[d.patientId] || ('Patient #' + d.patientId);
+      const doctorName = doctorsMap[d.doctorId] || ('Doctor #' + d.doctorId);
+      const initials = patientName.substring(0, 2).toUpperCase();
+
+      const row = `
+        <tr>
+          <td>
+            <div class="patient-cell">
+              <div class="small-avatar">${initials}</div>
+              <strong>${patientName}</strong>
+            </div>
+          </td>
+
+          <td>${d.diagnosisName}</td>
+          <td>${doctorName}</td>
+          <td>${d.diagnosisDate}</td>
+          <td>${d.description || 'No details'}</td>
+
+          <td>
+            <button
+              class="btn btn-light"
+              onclick='editDiagnosis(${JSON.stringify(d)})'
+            >
+              Edit
+            </button>
+          </td>
+        </tr>
+      `;
+      tbody.append(row);
+    });
+  }
+
+
+
+  // ==============================
+  // EDIT DIAGNOSIS
+  // ==============================
+  function editDiagnosis(d) {
+    $('#diagnosisId').val(d.diagnosisId);
+    $('#patientId').val(d.patientId);
+    $('#doctorId').val(d.doctorId);
+    $('#diagnosisName').val(d.diagnosisName);
+    $('#diagnosisDate').val(d.diagnosisDate);
+    $('#description').val(d.description);
+
+    $('#formTitle').text('Update Diagnosis');
+    $('#saveBtn').text('Update Diagnosis');
+
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+
+
+  // ==============================
+  // RESET FORM
+  // ==============================
+  function resetForm() {
+    $('#diagnosisForm')[0].reset();
+    $('#diagnosisId').val('');
+    $('#formTitle').text('Add Diagnosis');
+    $('#saveBtn').text('+ Save Diagnosis');
+  }
+
+</script>
 
 </body>
 </html>

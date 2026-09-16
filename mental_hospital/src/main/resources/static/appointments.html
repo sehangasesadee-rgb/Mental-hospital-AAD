@@ -60,7 +60,8 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search appointments...">
+      <!-- Search input with ID for filtering -->
+      <input type="text" id="searchAppointmentInput" class="search" placeholder="Search appointments by ID...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -74,66 +75,63 @@
   </div>
 
 
-  <div class="card section">
+  <!-- Form Card with ID to hide/show during search -->
+  <div class="card section" id="appointmentFormCard">
 
     <div class="card-header">
-      <h3>Schedule New Appointment</h3>
+      <h3 id="formTitle">Schedule New Appointment</h3>
     </div>
 
-    <form>
+    <form id="appointmentForm">
+      <!-- Hidden Input for Update (appointmentId) -->
+      <input type="hidden" id="appointmentId">
 
       <div class="form-grid">
 
         <div class="form-group">
           <label>Patient</label>
-          <select>
-            <option>Select patient</option>
-            <option>Nethmi Silva</option>
-            <option>Ravindu Perera</option>
-            <option>Sewmi Madushika</option>
+          <select id="patientId" required>
+            <option value="">Select patient</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Doctor</label>
-          <select>
-            <option>Select doctor</option>
-            <option>Dr. Kasun Perera</option>
-            <option>Dr. Amali Fernando</option>
-            <option>Dr. Tharindu Silva</option>
+          <select id="doctorId" required>
+            <option value="">Select doctor</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Appointment Date</label>
-          <input type="date">
+          <input type="date" id="appointmentDate" required>
         </div>
 
         <div class="form-group">
           <label>Appointment Time</label>
-          <input type="time">
+          <input type="time" id="appointmentTime" required>
         </div>
 
         <div class="form-group">
           <label>Appointment Status</label>
-          <select>
-            <option>SCHEDULED</option>
-            <option>CONFIRMED</option>
-            <option>COMPLETED</option>
-            <option>CANCELLED</option>
+          <select id="appointmentStatus" required>
+            <option value="SCHEDULED">SCHEDULED</option>
+            <option value="CONFIRMED">CONFIRMED</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="CANCELLED">CANCELLED</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Reason</label>
-          <input type="text" placeholder="Reason for appointment">
+          <input type="text" id="reason" placeholder="Reason for appointment">
         </div>
 
       </div>
 
       <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Schedule Appointment</button>
+        <button type="reset" id="resetBtn" class="btn btn-light">Clear</button>
+        <button type="submit" id="saveBtn" class="btn btn-primary">+ Schedule Appointment</button>
       </div>
 
     </form>
@@ -145,8 +143,7 @@
 
     <div class="card-header">
       <h3>Upcoming Appointments</h3>
-
-      <span>Today · 12 Appointments</span>
+      <span id="appointmentCount">Total · 0 Appointments</span>
     </div>
 
     <div class="table-container">
@@ -165,74 +162,8 @@
         </tr>
         </thead>
 
-        <tbody>
-
-<!--        <tr>-->
-<!--          <td>-->
-<!--            <div class="patient-cell">-->
-<!--              <div class="small-avatar">NS</div>-->
-<!--              <strong>Nethmi Silva</strong>-->
-<!--            </div>-->
-<!--          </td>-->
-
-<!--          <td>Dr. Kasun Perera</td>-->
-<!--          <td>2026-09-05</td>-->
-<!--          <td>09:00 AM</td>-->
-<!--          <td>Follow-up</td>-->
-
-<!--          <td>-->
-<!--            <span class="badge badge-success">Confirmed</span>-->
-<!--          </td>-->
-
-<!--          <td>-->
-<!--            <button class="btn btn-light">Edit</button>-->
-<!--          </td>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--          <td>-->
-<!--            <div class="patient-cell">-->
-<!--              <div class="small-avatar">RP</div>-->
-<!--              <strong>Ravindu Perera</strong>-->
-<!--            </div>-->
-<!--          </td>-->
-
-<!--          <td>Dr. Amali Fernando</td>-->
-<!--          <td>2026-09-05</td>-->
-<!--          <td>10:30 AM</td>-->
-<!--          <td>Therapy</td>-->
-
-<!--          <td>-->
-<!--            <span class="badge badge-warning">Waiting</span>-->
-<!--          </td>-->
-
-<!--          <td>-->
-<!--            <button class="btn btn-light">Edit</button>-->
-<!--          </td>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--          <td>-->
-<!--            <div class="patient-cell">-->
-<!--              <div class="small-avatar">SM</div>-->
-<!--              <strong>Sewmi Madushika</strong>-->
-<!--            </div>-->
-<!--          </td>-->
-
-<!--          <td>Dr. Tharindu Silva</td>-->
-<!--          <td>2026-09-05</td>-->
-<!--          <td>01:30 PM</td>-->
-<!--          <td>Counseling</td>-->
-
-<!--          <td>-->
-<!--            <span class="badge badge-blue">Scheduled</span>-->
-<!--          </td>-->
-
-<!--          <td>-->
-<!--            <button class="btn btn-light">Edit</button>-->
-<!--          </td>-->
-<!--        </tr>-->
-
+        <tbody id="appointmentTableBody">
+        <!-- Dynamic Rows will load here -->
         </tbody>
 
       </table>
@@ -242,6 +173,346 @@
   </div>
 
 </main>
+
+
+<!-- Include jQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+  // Global Maps to hold names for ID mapping
+  let patientsMap = {};
+  let doctorsMap = {};
+
+  // ==============================
+  // GET CURRENT JWT TOKEN
+  // ==============================
+  function getAuthHeaders() {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      alert("Session expired. Please login again.");
+      window.location.href = "login.html";
+      return {};
+    }
+
+    return {
+      "Authorization": "Bearer " + token
+    };
+  }
+
+  $(document).ready(function () {
+
+    // Load Dropdowns and Data on Page Load
+    loadPatientDropdown();
+    loadDoctorDropdown();
+    loadAppointments();
+
+
+    // ==============================
+    // RESET BUTTON
+    // ==============================
+    $('#resetBtn').on('click', function () {
+      resetFormState();
+    });
+
+
+    // ==============================
+    // SAVE / UPDATE APPOINTMENT
+    // ==============================
+    $('#appointmentForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const aptId = $('#appointmentId').val();
+      const patientId = $('#patientId').val();
+      const doctorId = $('#doctorId').val();
+      const appointmentDate = $('#appointmentDate').val();
+      const appointmentTime = $('#appointmentTime').val();
+      const appointmentStatus = $('#appointmentStatus').val();
+      const reason = $('#reason').val().trim();
+
+      // Validation
+      if (!patientId || !doctorId || !appointmentDate || !appointmentTime || !appointmentStatus) {
+        alert("Please fill out all required fields.");
+        return;
+      }
+
+      const appointmentData = {
+        appointmentId: aptId ? parseInt(aptId) : null,
+        patientId: parseInt(patientId),
+        doctorId: parseInt(doctorId),
+        appointmentDate: appointmentDate,
+        appointmentTime: appointmentTime,
+        appointmentStatus: appointmentStatus,
+        reason: reason
+      };
+
+      const isUpdate = !!aptId;
+      const url = '/v1/appoinments';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: getAuthHeaders(),
+        data: JSON.stringify(appointmentData),
+
+        success: function (response) {
+          if (response.status === 0) {
+            alert(isUpdate ? "Appointment updated successfully!" : "Appointment scheduled successfully!");
+            resetFormState();
+            loadAppointments();
+          } else {
+            alert(response.message || "Operation failed.");
+          }
+        },
+
+        error: function (xhr) {
+          alert("Error: " + xhr.status + " - " + xhr.responseText);
+        }
+      });
+    });
+
+
+    // ==============================
+    // SEARCH / FILTER APPOINTMENTS
+    // ==============================
+    $('#searchAppointmentInput').on('input', function () {
+      const query = $(this).val().trim();
+
+      if (query === '') {
+        $('#appointmentFormCard').show(); // Show form when search is empty
+        loadAppointments();
+        return;
+      }
+
+      $('#appointmentFormCard').hide(); // Hide form during search
+
+      $.ajax({
+        url: `/v1/appoinments/filter?appointmentId=${encodeURIComponent(query)}`,
+        type: 'GET',
+        headers: getAuthHeaders(),
+
+        success: function (response) {
+          if (response.status === 0) {
+            renderAppointments(response.body || []);
+          }
+        },
+
+        error: function (xhr) {
+          $('#appointmentTableBody').html(
+                  '<tr>' +
+                  '<td colspan="7" style="text-align:center; color:gray; padding:20px;">' +
+                  'No appointments found.' +
+                  '</td>' +
+                  '</tr>'
+          );
+        }
+      });
+    });
+
+
+    // ==============================
+    // CANCEL / DELETE APPOINTMENT
+    // ==============================
+    $(document).on('click', '.btn-cancel', function () {
+      const id = $(this).data('id');
+      if (confirm("Are you sure you want to cancel this appointment?")) {
+        $.ajax({
+          url: `/v1/appoinments/${id}`,
+          type: 'DELETE',
+          headers: getAuthHeaders(),
+
+          success: function (response) {
+            if (response.status === 0) {
+              alert("Appointment cancelled successfully!");
+              loadAppointments();
+            } else {
+              alert(response.message || "Failed to cancel appointment.");
+            }
+          },
+
+          error: function (xhr) {
+            alert("Error: " + xhr.status + " - " + xhr.responseText);
+          }
+        });
+      }
+    });
+
+  });
+
+
+
+  // ==============================
+  // LOAD PATIENT DROPDOWN
+  // ==============================
+  function loadPatientDropdown() {
+    $.ajax({
+      url: '/v1/patients',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#patientId');
+        select.empty();
+        select.append('<option value="">Select patient</option>');
+
+        const patients = res.body || [];
+        patients.forEach(function (p) {
+          patientsMap[p.patientId] = p.patientName;
+          select.append(`<option value="${p.patientId}">${p.patientName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load patients");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD DOCTOR DROPDOWN
+  // ==============================
+  function loadDoctorDropdown() {
+    $.ajax({
+      url: '/v1/doctors',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#doctorId');
+        select.empty();
+        select.append('<option value="">Select doctor</option>');
+
+        const doctors = res.body || [];
+        doctors.forEach(function (d) {
+          doctorsMap[d.doctorId] = d.doctorName;
+          select.append(`<option value="${d.doctorId}">${d.doctorName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load doctors");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD ALL APPOINTMENTS
+  // ==============================
+  function loadAppointments() {
+    $.ajax({
+      url: '/v1/appoinments',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (response) {
+        if (response.status === 0) {
+          renderAppointments(response.body || []);
+        }
+      },
+
+      error: function (xhr) {
+        $('#appointmentTableBody').html(
+                '<tr>' +
+                '<td colspan="7" style="text-align:center; color:red; padding:20px;">' +
+                'Failed to load appointments.' +
+                '</td>' +
+                '</tr>'
+        );
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // RENDER APPOINTMENTS TABLE
+  // ==============================
+  function renderAppointments(appointments) {
+    const tableBody = $('#appointmentTableBody');
+    tableBody.empty();
+
+    if (!appointments || appointments.length === 0) {
+      tableBody.html('<tr><td colspan="7" style="text-align:center; padding:20px; color:gray;">No appointments found.</td></tr>');
+      $('#appointmentCount').text('Total · 0 Appointments');
+      return;
+    }
+
+    $('#appointmentCount').text(`Total · ${appointments.length} Appointments`);
+
+    appointments.forEach(apt => {
+      const patientName = patientsMap[apt.patientId] || ('Patient #' + apt.patientId);
+      const doctorName = doctorsMap[apt.doctorId] || ('Doctor #' + apt.doctorId);
+      const initials = patientName.substring(0, 2).toUpperCase();
+
+      let badgeClass = 'badge-blue';
+      let statusText = apt.appointmentStatus || 'SCHEDULED';
+      if (statusText === 'CONFIRMED') badgeClass = 'badge-success';
+      else if (statusText === 'WAITING' || statusText === 'COMPLETED') badgeClass = 'badge-warning';
+      else if (statusText === 'CANCELLED') badgeClass = 'badge-danger';
+
+      const rowHtml = `
+        <tr>
+          <td>
+            <div class="patient-cell">
+              <div class="small-avatar">${initials}</div>
+              <strong>${patientName}</strong>
+            </div>
+          </td>
+          <td>${doctorName}</td>
+          <td>${apt.appointmentDate || 'N/A'}</td>
+          <td>${apt.appointmentTime || 'N/A'}</td>
+          <td>${apt.reason || 'N/A'}</td>
+          <td>
+            <span class="badge ${badgeClass}">${statusText}</span>
+          </td>
+          <td>
+            <button class="btn btn-light" onclick='editAppointment(${JSON.stringify(apt)})'>Edit</button>
+            <button class="btn btn-light btn-cancel" data-id="${apt.appointmentId}" style="color: red;">Cancel</button>
+          </td>
+        </tr>
+      `;
+      tableBody.append(rowHtml);
+    });
+  }
+
+
+
+  // ==============================
+  // EDIT APPOINTMENT
+  // ==============================
+  function editAppointment(apt) {
+    $('#appointmentId').val(apt.appointmentId);
+    $('#patientId').val(apt.patientId);
+    $('#doctorId').val(apt.doctorId);
+    $('#appointmentDate').val(apt.appointmentDate);
+    $('#appointmentTime').val(apt.appointmentTime);
+    $('#appointmentStatus').val(apt.appointmentStatus || 'SCHEDULED');
+    $('#reason').val(apt.reason);
+
+    $('#formTitle').text('Update Appointment');
+    $('#saveBtn').text('Update Appointment');
+
+    $('html, body').animate({ scrollTop: $('#appointmentFormCard').offset().top }, 'fast');
+  }
+
+
+
+  // ==============================
+  // RESET FORM STATE
+  // ==============================
+  function resetFormState() {
+    $('#appointmentForm')[0].reset();
+    $('#appointmentId').val('');
+    $('#formTitle').text('Schedule New Appointment');
+    $('#saveBtn').text('+ Schedule Appointment');
+  }
+</script>
 
 </body>
 </html>

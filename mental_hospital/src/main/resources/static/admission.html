@@ -62,7 +62,7 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search admissions...">
+      <input type="text" id="searchAdmissionInput" class="search" placeholder="Search admissions by ID...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -77,68 +77,70 @@
   </div>
 
 
-  <div class="card section">
+  <div class="card section" id="admissionFormCard">
 
     <div class="card-header">
-      <h3>New Admission</h3>
+      <h3 id="formTitle">New Admission</h3>
     </div>
 
-    <form>
+    <form id="admissionForm">
+      <!-- Hidden Input for Update (AdmissionId) -->
+      <input type="hidden" id="admissionId">
 
       <div class="form-grid">
 
         <div class="form-group">
           <label>Patient</label>
-          <select>
-            <option>Select patient</option>
+          <select id="patientId" required>
+            <option value="">Select patient</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Doctor</label>
-          <select>
-            <option>Select doctor</option>
+          <select id="doctorId" required>
+            <option value="">Select doctor</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Ward</label>
-          <select>
-            <option>Select ward</option>
+          <select id="wardId" required>
+            <option value="">Select ward</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Bed</label>
-          <select>
-            <option>Select bed</option>
+          <select id="bedId" required>
+            <option value="">Select bed</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Admission Date</label>
-          <input type="date">
+          <input type="date" id="admissionDate" required>
         </div>
 
         <div class="form-group">
           <label>Admission Status</label>
-          <select>
-            <option>ADMITTED</option>
-            <option>ACTIVE</option>
-            <option>DISCHARGED</option>
+          <select id="admissionStatus" required>
+            <option value="ADMITTED">ADMITTED</option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="DISCHARGED">DISCHARGED</option>
           </select>
         </div>
 
         <div class="form-group full">
           <label>Reason</label>
-          <textarea placeholder="Enter reason for admission"></textarea>
+          <textarea id="reason" placeholder="Enter reason for admission"></textarea>
         </div>
 
       </div>
 
       <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Admit Patient</button>
+        <button type="reset" id="resetBtn" class="btn btn-light">Clear</button>
+        <button type="submit" id="saveBtn" class="btn btn-primary">+ Admit Patient</button>
       </div>
 
     </form>
@@ -168,8 +170,8 @@
         </tr>
         </thead>
 
-        <tbody>
-
+        <tbody id="admissionTableBody">
+        <!-- Dynamic Rows will load here -->
         </tbody>
 
       </table>
@@ -180,5 +182,404 @@
 
 </main>
 
+
+<!-- jQuery Scripting -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+
+  // Global Maps to hold names for ID mapping
+  let patientsMap = {};
+  let doctorsMap = {};
+  let wardsMap = {};
+  let bedsMap = {};
+  let allBedsList = [];
+
+  // ==============================
+  // GET CURRENT JWT TOKEN
+  // ==============================
+  function getAuthHeaders() {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      alert("Session expired. Please login again.");
+      window.location.href = "login.html";
+      return {};
+    }
+
+    return {
+      "Authorization": "Bearer " + token
+    };
+  }
+
+
+  // ==============================
+  // PAGE LOAD
+  // ==============================
+  $(document).ready(function () {
+
+    loadPatientDropdown();
+    loadDoctorDropdown();
+    loadWardDropdown();
+    loadBedDropdown();
+    loadAllAdmissions();
+
+
+    // ==============================
+    // WARD CHANGE EVENT (Filter Beds)
+    // ==============================
+    $('#wardId').on('change', function () {
+      const selectedWardId = $(this).val();
+      const bedSelect = $('#bedId');
+      bedSelect.empty();
+      bedSelect.append('<option value="">Select bed</option>');
+
+      if (!selectedWardId) return;
+
+      allBedsList.forEach(function (b) {
+        if (b.wardId == selectedWardId) {
+          bedSelect.append(`<option value="${b.bedId}">${b.bedNumber} (${b.bedType})</option>`);
+        }
+      });
+    });
+
+
+    // ==============================
+    // RESET BUTTON
+    // ==============================
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+
+    // ==============================
+    // SAVE / UPDATE ADMISSION
+    // ==============================
+    $('#admissionForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const admId = $('#admissionId').val();
+      const patientId = $('#patientId').val();
+      const doctorId = $('#doctorId').val();
+      const wardId = $('#wardId').val();
+      const bedId = $('#bedId').val();
+      const admissionDate = $('#admissionDate').val();
+      const admissionStatus = $('#admissionStatus').val();
+      const reason = $('#reason').val().trim();
+
+
+      // Validation
+      if (!patientId || !doctorId || !wardId || !bedId || !admissionDate || !admissionStatus) {
+        alert("Please fill out all required fields.");
+        return;
+      }
+
+      const admissionData = {
+        admissionId: admId ? parseInt(admId) : null,
+        admissionDate: admissionDate,
+        reason: reason,
+        admissionStatus: admissionStatus,
+        patientId: parseInt(patientId),
+        wardId: parseInt(wardId),
+        bedId: parseInt(bedId),
+        doctorId: parseInt(doctorId)
+      };
+
+      const isUpdate = !!admId;
+      const url = '/v1/admission';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: getAuthHeaders(),
+        data: JSON.stringify(admissionData),
+
+        success: function (res) {
+          alert(isUpdate ? "Admission updated successfully!" : "Patient admitted successfully!");
+          resetForm();
+          loadAllAdmissions();
+        },
+
+        error: function (xhr) {
+          alert("Error: " + xhr.status + "\n" + xhr.responseText);
+        }
+      });
+
+    });
+
+
+    // ==============================
+    // SEARCH / FILTER ADMISSION
+    // ==============================
+    $('#searchAdmissionInput').on('input', function () {
+      const query = $(this).val().trim();
+
+      if (query === '') {
+        $('#admissionFormCard').show(); // Show form when search is empty
+        loadAllAdmissions();
+        return;
+      }
+
+      $('#admissionFormCard').hide(); // Hide form during search
+
+      $.ajax({
+        url: `/v1/admission/filter?admissionId=${encodeURIComponent(query)}`,
+        type: 'GET',
+        headers: getAuthHeaders(),
+
+        success: function (res) {
+          renderAdmissions(res.body || []);
+        },
+
+        error: function (xhr) {
+          $('#admissionTableBody').html(
+                  '<tr>' +
+                  '<td colspan="7" style="text-align:center; color:gray; padding:20px;">' +
+                  'No admissions found.' +
+                  '</td>' +
+                  '</tr>'
+          );
+        }
+      });
+
+    });
+
+  });
+
+
+
+  // ==============================
+  // LOAD PATIENT DROPDOWN
+  // ==============================
+  function loadPatientDropdown() {
+    $.ajax({
+      url: '/v1/patients',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#patientId');
+        select.empty();
+        select.append('<option value="">Select patient</option>');
+
+        const patients = res.body || [];
+        patients.forEach(function (p) {
+          patientsMap[p.patientId] = p.patientName;
+          select.append(`<option value="${p.patientId}">${p.patientName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load patients");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD DOCTOR DROPDOWN
+  // ==============================
+  function loadDoctorDropdown() {
+    $.ajax({
+      url: '/v1/doctors',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#doctorId');
+        select.empty();
+        select.append('<option value="">Select doctor</option>');
+
+        const doctors = res.body || [];
+        doctors.forEach(function (d) {
+          doctorsMap[d.doctorId] = d.doctorName;
+          select.append(`<option value="${d.doctorId}">${d.doctorName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load doctors");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD WARD DROPDOWN
+  // ==============================
+  function loadWardDropdown() {
+    $.ajax({
+      url: '/v1/wards',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#wardId');
+        select.empty();
+        select.append('<option value="">Select ward</option>');
+
+        const wards = res.body || [];
+        wards.forEach(function (w) {
+          wardsMap[w.wardId] = w.wardName;
+          select.append(`<option value="${w.wardId}">${w.wardName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load wards");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD BED DROPDOWN
+  // ==============================
+  function loadBedDropdown() {
+    $.ajax({
+      url: '/v1/beds',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        allBedsList = res.body || [];
+        allBedsList.forEach(function (b) {
+          bedsMap[b.bedId] = b.bedNumber;
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load beds");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD ALL ADMISSIONS
+  // ==============================
+  function loadAllAdmissions() {
+    $.ajax({
+      url: '/v1/admission',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        renderAdmissions(res.body || []);
+      },
+
+      error: function (xhr) {
+        $('#admissionTableBody').html(
+                '<tr>' +
+                '<td colspan="7" style="text-align:center; color:red; padding:20px;">' +
+                'Failed to load admissions.' +
+                '</td>' +
+                '</tr>'
+        );
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // RENDER ADMISSIONS TABLE
+  // ==============================
+  function renderAdmissions(admissions) {
+    const tbody = $('#admissionTableBody');
+    tbody.empty();
+
+    if (!admissions || admissions.length === 0) {
+      tbody.html(
+              '<tr>' +
+              '<td colspan="7" style="text-align:center; color:gray; padding:20px;">' +
+              'No admissions found.' +
+              '</td>' +
+              '</tr>'
+      );
+      return;
+    }
+
+    admissions.forEach(function (a) {
+      const patientName = patientsMap[a.patientId] || ('Patient #' + a.patientId);
+      const doctorName = doctorsMap[a.doctorId] || ('Doctor #' + a.doctorId);
+      const wardName = wardsMap[a.wardId] || ('Ward #' + a.wardId);
+      const bedNumber = bedsMap[a.bedId] || ('Bed #' + a.bedId);
+      const initials = patientName.substring(0, 2).toUpperCase();
+
+      const row = `
+        <tr>
+          <td>
+            <div class="patient-cell">
+              <div class="small-avatar">${initials}</div>
+              <strong>${patientName}</strong>
+            </div>
+          </td>
+
+          <td>${doctorName}</td>
+          <td>${wardName}</td>
+          <td>${bedNumber}</td>
+          <td>${a.admissionDate}</td>
+          <td><span class="badge">${a.admissionStatus}</span></td>
+
+          <td>
+            <button
+              class="btn btn-light"
+              onclick='editAdmission(${JSON.stringify(a)})'
+            >
+              Edit
+            </button>
+          </td>
+        </tr>
+      `;
+      tbody.append(row);
+    });
+  }
+
+
+
+  // ==============================
+  // EDIT ADMISSION
+  // ==============================
+  function editAdmission(a) {
+    $('#admissionId').val(a.admissionId);
+    $('#patientId').val(a.patientId);
+    $('#doctorId').val(a.doctorId);
+    $('#wardId').val(a.wardId);
+
+    // Trigger ward change to load respective beds, then set bedId
+    $('#wardId').trigger('change');
+    $('#bedId').val(a.bedId);
+
+    $('#admissionDate').val(a.admissionDate);
+    $('#admissionStatus').val(a.admissionStatus);
+    $('#reason').val(a.reason);
+
+    $('#formTitle').text('Update Admission');
+    $('#saveBtn').text('Update Admission');
+
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+
+
+  // ==============================
+  // RESET FORM
+  // ==============================
+  function resetForm() {
+    $('#admissionForm')[0].reset();
+    $('#admissionId').val('');
+    $('#bedId').html('<option value="">Select bed</option>');
+    $('#formTitle').text('New Admission');
+    $('#saveBtn').text('+ Admit Patient');
+  }
+
+</script>
 </body>
 </html>

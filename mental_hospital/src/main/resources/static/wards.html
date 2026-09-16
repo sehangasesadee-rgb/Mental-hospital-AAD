@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindCare - Wards</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .card-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -20,7 +27,6 @@
   </div>
 
   <div class="menu-title">Main</div>
-
   <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
   <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
   <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
@@ -28,7 +34,6 @@
   <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
 
   <div class="menu-title">Patient Care</div>
-
   <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
   <a href="discharges.html" class="nav-item"><span class="nav-icon">🚪</span><span>Discharges</span></a>
   <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
@@ -36,14 +41,12 @@
   <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
 
   <div class="menu-title">Hospital</div>
-
   <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
   <a href="wards.html" class="nav-item active"><span class="nav-icon">🏨</span><span>Wards</span></a>
   <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
   <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
 
   <div class="menu-title">Administration</div>
-
   <a href="emergency-contacts.html" class="nav-item"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
   <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
   <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
@@ -62,7 +65,7 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search wards...">
+      <input class="search" id="searchWardInput" placeholder="Search wards...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -80,55 +83,53 @@
   <div class="card section">
 
     <div class="card-header">
-      <h3>Add New Ward</h3>
+      <h3 id="formTitle">Add New Ward</h3>
     </div>
 
-    <form>
-
+    <form id="wardForm">
+      <input type="hidden" id="wardId">
       <div class="form-grid">
 
         <div class="form-group">
           <label>Ward Name</label>
-          <input type="text" placeholder="Enter ward name">
+          <input type="text" id="wardName" placeholder="Enter ward name" required>
         </div>
 
         <div class="form-group">
           <label>Ward Type</label>
-          <select>
-            <option>Select ward type</option>
-            <option>Male Ward</option>
-            <option>Female Ward</option>
-            <option>General Ward</option>
+          <select id="wardType" required>
+            <option value="">Select ward type</option>
+            <option value="Male Ward">Male Ward</option>
+            <option value="Female Ward">Female Ward</option>
+            <option value="General Ward">General Ward</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Capacity</label>
-          <input type="number" placeholder="Enter capacity">
+          <input type="number" id="capacity" placeholder="Enter capacity" required>
         </div>
 
         <div class="form-group">
           <label>Department</label>
-          <select>
-            <option>Select department</option>
-            <option>Psychiatry</option>
-            <option>Psychology</option>
+          <select id="departmentId" required>
+            <option value="">Select department</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Ward Status</label>
-          <select>
-            <option>ACTIVE</option>
-            <option>INACTIVE</option>
+          <select id="wardStatus" required>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
           </select>
         </div>
 
       </div>
 
-      <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Add Ward</button>
+      <div class="form-actions" style="margin-top: 15px;">
+        <button type="button" class="btn btn-light" id="resetBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">+ Add Ward</button>
       </div>
 
     </form>
@@ -136,79 +137,184 @@
   </div>
 
 
-  <div class="grid-3">
-
-    <div class="card">
-
-      <div class="card-header">
-        <h3>Female Ward</h3>
-        <span>FW-01</span>
-      </div>
-
-      <p style="font-size:11px;color:#888">Psychiatry</p>
-
-      <h2 style="margin-top:15px">18 / 22</h2>
-      <p style="font-size:10px;color:#999">Beds occupied</p>
-
-      <div class="progress" style="margin-top:12px">
-        <div class="progress-bar" style="width:82%"></div>
-      </div>
-
-      <div style="margin-top:15px">
-        <span class="badge badge-success">Active</span>
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="card-header">
-        <h3>Male Ward</h3>
-        <span>MW-01</span>
-      </div>
-
-      <p style="font-size:11px;color:#888">Psychiatry</p>
-
-      <h2 style="margin-top:15px">13 / 20</h2>
-      <p style="font-size:10px;color:#999">Beds occupied</p>
-
-      <div class="progress" style="margin-top:12px">
-        <div class="progress-bar" style="width:65%"></div>
-      </div>
-
-      <div style="margin-top:15px">
-        <span class="badge badge-success">Active</span>
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="card-header">
-        <h3>General Ward</h3>
-        <span>GW-01</span>
-      </div>
-
-      <p style="font-size:11px;color:#888">General Care</p>
-
-      <h2 style="margin-top:15px">10 / 18</h2>
-      <p style="font-size:10px;color:#999">Beds occupied</p>
-
-      <div class="progress" style="margin-top:12px">
-        <div class="progress-bar" style="width:55%"></div>
-      </div>
-
-      <div style="margin-top:15px">
-        <span class="badge badge-success">Active</span>
-      </div>
-
-    </div>
-
+  <!-- Dynamic Wards Grid -->
+  <div class="grid-3" id="wardGrid">
+    <!-- Wards will load dynamically here -->
   </div>
 
 </main>
+
+<!-- jQuery Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  const token = localStorage.getItem("authToken");
+  const headers = { "Authorization": "Bearer " + token };
+
+  $(document).ready(function () {
+    loadDepartments();
+    loadAllWards();
+
+    // Reset Form
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+    // Save or Update Form Submit
+    $('#wardForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const wId = $('#wardId').val();
+      const wardData = {
+        wardId: wId ? parseInt(wId) : null,
+        wardName: $('#wardName').val().trim(),
+        wardType: $('#wardType').val(),
+        capacity: parseInt($('#capacity').val()),
+        departmentId: parseInt($('#departmentId').val()),
+        wardStatus: $('#wardStatus').val()
+      };
+
+      const isUpdate = !!wId;
+      const url = '/v1/wards';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: headers,
+        data: JSON.stringify(wardData),
+        success: function (res) {
+          if (res.status === 0 || res.statusCode === 200 || res.code === "00") {
+            alert(isUpdate ? "Ward updated successfully!" : "Ward saved successfully!");
+            resetForm();
+            loadAllWards();
+          } else {
+            alert(res.message || "Operation failed.");
+          }
+        },
+        error: function (xhr) {
+          alert("Error: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    });
+
+    // Search / Filter Wards
+    $('#searchWardInput').on('input', function () {
+      const query = $(this).val().trim();
+      if (query === '') {
+        loadAllWards();
+      } else {
+        $.ajax({
+          url: `/v1/wards/filter?name=${encodeURIComponent(query)}`,
+          type: 'GET',
+          headers: headers,
+          success: function (res) {
+            renderWards(res.body || []);
+          }
+        });
+      }
+    });
+  });
+
+  function loadDepartments() {
+    $.ajax({
+      url: '/v1/department',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        const deptSelect = $('#departmentId');
+        deptSelect.empty().append('<option value="">Select department</option>');
+        const departments = res.body || [];
+        departments.forEach(dept => {
+          deptSelect.append(`<option value="${dept.departmentId}">[ID: ${dept.departmentId}] ${dept.departmentName}</option>`);
+        });
+      }
+    });
+  }
+
+  function loadAllWards() {
+    $.ajax({
+      url: '/v1/wards',
+      type: 'GET',
+      headers: headers,
+      success: function (res) {
+        renderWards(res.body || []);
+      }
+    });
+  }
+
+  function renderWards(wards) {
+    const grid = $('#wardGrid');
+    grid.empty();
+
+    if (!wards || wards.length === 0) {
+      grid.html('<p style="grid-column: 1/-1; text-align:center; color:gray;">No wards found.</p>');
+      return;
+    }
+
+    wards.forEach(ward => {
+      const statusBadge = ward.wardStatus === 'ACTIVE'
+              ? '<span class="badge badge-success">Active</span>'
+              : '<span class="badge badge-warning" style="background:#ffc107; color:#000;">Inactive</span>';
+
+      const card = `
+        <div class="card">
+          <div class="card-header">
+            <h3>${ward.wardName}</h3>
+            <span>ID: ${ward.wardId}</span>
+          </div>
+          <p style="font-size:11px;color:#888">${ward.wardType} | Dept ID: ${ward.departmentId}</p>
+          <h2 style="margin-top:15px">Capacity: ${ward.capacity}</h2>
+          <div style="margin-top:15px">
+            ${statusBadge}
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-light" style="padding:4px 10px; font-size:11px; flex:1;" onclick='editWard(${JSON.stringify(ward)})'>Edit</button>
+            <button class="btn btn-primary" style="padding:4px 10px; font-size:11px; flex:1; background:#dc3545; border-color:#dc3545;" onclick="deleteWard(${ward.wardId})">Delete</button>
+          </div>
+        </div>
+      `;
+      grid.append(card);
+    });
+  }
+
+  function editWard(ward) {
+    $('#wardId').val(ward.wardId);
+    $('#wardName').val(ward.wardName);
+    $('#wardType').val(ward.wardType);
+    $('#capacity').val(ward.capacity);
+    $('#departmentId').val(ward.departmentId);
+    $('#wardStatus').val(ward.wardStatus || 'ACTIVE');
+
+    $('#formTitle').text('Update Ward');
+    $('#saveBtn').text('Update Ward');
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+  function deleteWard(id) {
+    if (confirm("Are you sure you want to change/delete this ward status?")) {
+      $.ajax({
+        url: `/v1/wards/${id}`,
+        type: 'DELETE',
+        headers: headers,
+        success: function (res) {
+          alert("Ward status updated/deleted successfully!");
+          loadAllWards();
+        },
+        error: function (xhr) {
+          alert("Operation failed: " + (xhr.responseText || "Server Error"));
+        }
+      });
+    }
+  }
+
+  function resetForm() {
+    $('#wardForm')[0].reset();
+    $('#wardId').val('');
+    $('#formTitle').text('Add New Ward');
+    $('#saveBtn').text('+ Add Ward');
+  }
+</script>
 
 </body>
 </html>

@@ -20,7 +20,6 @@
   </div>
 
   <div class="menu-title">Main</div>
-
   <a href="dashboard.html" class="nav-item"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
   <a href="patients.html" class="nav-item"><span class="nav-icon">👥</span><span>Patients</span></a>
   <a href="doctors.html" class="nav-item"><span class="nav-icon">🩺</span><span>Doctors</span></a>
@@ -28,7 +27,6 @@
   <a href="appointments.html" class="nav-item"><span class="nav-icon">📅</span><span>Appointments</span></a>
 
   <div class="menu-title">Patient Care</div>
-
   <a href="admission.html" class="nav-item"><span class="nav-icon">🏥</span><span>Admissions</span></a>
   <a href="discharges.html" class="nav-item active"><span class="nav-icon">🚪</span><span>Discharges</span></a>
   <a href="diagnoses.html" class="nav-item"><span class="nav-icon">🧠</span><span>Diagnoses</span></a>
@@ -36,14 +34,12 @@
   <a href="prescriptions.html" class="nav-item"><span class="nav-icon">📋</span><span>Prescriptions</span></a>
 
   <div class="menu-title">Hospital</div>
-
   <a href="departments.html" class="nav-item"><span class="nav-icon">🏢</span><span>Departments</span></a>
   <a href="wards.html" class="nav-item"><span class="nav-icon">🏨</span><span>Wards</span></a>
   <a href="beds.html" class="nav-item"><span class="nav-icon">🛏️</span><span>Beds</span></a>
   <a href="medications.html" class="nav-item"><span class="nav-icon">💊</span><span>Medications</span></a>
 
   <div class="menu-title">Administration</div>
-
   <a href="emergency-contacts.html" class="nav-item"><span class="nav-icon">📞</span><span>Emergency Contacts</span></a>
   <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span>Payments</span></a>
   <a href="user.html" class="nav-item"><span class="nav-icon">👤</span><span>Users</span></a>
@@ -62,7 +58,7 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search discharges...">
+      <input class="search" id="searchDischargeInput" placeholder="Search by Discharge ID...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -77,58 +73,55 @@
   </div>
 
 
-  <div class="card section">
+  <!-- Process / Update Discharge Form Section -->
+  <div class="card section" id="dischargeFormCard">
 
     <div class="card-header">
-      <h3>Process Patient Discharge</h3>
+      <h3 id="formTitle">Process Patient Discharge</h3>
     </div>
 
-    <form>
-
+    <form id="dischargeForm">
+      <input type="hidden" id="dischargeId">
       <div class="form-grid">
 
         <div class="form-group">
           <label>Admission</label>
-          <select>
-            <option>Select admission</option>
-            <option>Admission #1001 - Ravindu Perera</option>
-            <option>Admission #1002 - Kavindi Mendis</option>
+          <select id="admissionId" required>
+            <option value="">Select admission</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Doctor</label>
-          <select>
-            <option>Select doctor</option>
-            <option>Dr. Kasun Perera</option>
-            <option>Dr. Amali Fernando</option>
+          <select id="doctorId" required>
+            <option value="">Select doctor</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Discharge Date</label>
-          <input type="date">
+          <input type="date" id="dischargeDate" required>
         </div>
 
         <div class="form-group">
           <label>Discharge Status</label>
-          <select>
-            <option>DISCHARGED</option>
-            <option>APPROVED</option>
-            <option>PENDING</option>
+          <select id="dischargeStatus" required>
+            <option value="DISCHARGED">DISCHARGED</option>
+            <option value="APPROVED">APPROVED</option>
+            <option value="PENDING">PENDING</option>
           </select>
         </div>
 
         <div class="form-group full">
           <label>Remarks</label>
-          <textarea placeholder="Enter discharge remarks"></textarea>
+          <textarea id="remarks" placeholder="Enter discharge remarks"></textarea>
         </div>
 
       </div>
 
-      <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">Process Discharge</button>
+      <div class="form-actions" style="margin-top: 15px;">
+        <button type="button" class="btn btn-light" id="resetBtn">Clear</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">Process Discharge</button>
       </div>
 
     </form>
@@ -136,6 +129,7 @@
   </div>
 
 
+  <!-- Discharge History Table Section -->
   <div class="card">
 
     <div class="card-header">
@@ -145,58 +139,20 @@
     <div class="table-container">
 
       <table>
-
         <thead>
         <tr>
-          <th>Patient</th>
-          <th>Admission</th>
-          <th>Doctor</th>
+          <th>ID</th>
+          <th>Admission ID</th>
+          <th>Doctor ID</th>
           <th>Discharge Date</th>
           <th>Remarks</th>
           <th>Status</th>
+          <th>Action</th>
         </tr>
         </thead>
-
-        <tbody>
-
-<!--        <tr>-->
-<!--          <td>-->
-<!--            <div class="patient-cell">-->
-<!--              <div class="small-avatar">AS</div>-->
-<!--              <strong>Amaya Senuri</strong>-->
-<!--            </div>-->
-<!--          </td>-->
-
-<!--          <td>#1008</td>-->
-<!--          <td>Dr. Kasun Perera</td>-->
-<!--          <td>2026-09-03</td>-->
-<!--          <td>Condition improved</td>-->
-
-<!--          <td>-->
-<!--            <span class="badge badge-success">Discharged</span>-->
-<!--          </td>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--          <td>-->
-<!--            <div class="patient-cell">-->
-<!--              <div class="small-avatar">DM</div>-->
-<!--              <strong>Dilshan Maduranga</strong>-->
-<!--            </div>-->
-<!--          </td>-->
-
-<!--          <td>#1005</td>-->
-<!--          <td>Dr. Tharindu Silva</td>-->
-<!--          <td>2026-09-01</td>-->
-<!--          <td>Follow-up recommended</td>-->
-
-<!--          <td>-->
-<!--            <span class="badge badge-success">Discharged</span>-->
-<!--          </td>-->
-<!--        </tr>-->
-
+        <tbody id="dischargeTableBody">
+        <!-- Loaded dynamically via AJAX -->
         </tbody>
-
       </table>
 
     </div>
@@ -204,6 +160,416 @@
   </div>
 
 </main>
+
+<!-- jQuery Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+
+  // ==============================
+  // GET CURRENT JWT TOKEN
+  // ==============================
+  function getAuthHeaders() {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      alert("Session expired. Please login again.");
+      window.location.href = "login.html";
+      return {};
+    }
+
+    return {
+      "Authorization": "Bearer " + token
+    };
+  }
+
+
+  // ==============================
+  // PAGE LOAD
+  // ==============================
+  $(document).ready(function () {
+
+    loadAdmissionsDropdown();
+    loadDoctorsDropdown();
+    loadAllDischarges();
+
+
+    // ==============================
+    // RESET BUTTON
+    // ==============================
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+
+    // ==============================
+    // SAVE / UPDATE DISCHARGE
+    // ==============================
+    $('#dischargeForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const dId = $('#dischargeId').val();
+      const admissionId = $('#admissionId').val();
+      const doctorId = $('#doctorId').val();
+      const dischargeDate = $('#dischargeDate').val();
+      const dischargeStatus = $('#dischargeStatus').val();
+      const remarks = $('#remarks').val().trim();
+
+
+      // ==============================
+      // BASIC VALIDATION
+      // ==============================
+      if (!admissionId) {
+        alert("Please select an admission.");
+        return;
+      }
+
+      if (!doctorId) {
+        alert("Please select a doctor.");
+        return;
+      }
+
+      if (!dischargeDate) {
+        alert("Please select discharge date.");
+        return;
+      }
+
+      if (!dischargeStatus) {
+        alert("Please select discharge status.");
+        return;
+      }
+
+
+      // ==============================
+      // REQUEST DATA
+      // ==============================
+      const dischargeData = {
+        dischargeId: dId ? parseInt(dId) : null,
+        admissionId: parseInt(admissionId),
+        doctorId: parseInt(doctorId),
+        dischargeDate: dischargeDate,
+        dischargeStatus: dischargeStatus,
+        remarks: remarks
+      };
+
+
+      console.log("DISCHARGE DATA:", dischargeData);
+
+
+      // ==============================
+      // DETERMINE POST / PUT
+      // ==============================
+      const isUpdate = !!dId;
+      const url = '/v1/discharge';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+
+      console.log("REQUEST TYPE:", type);
+      console.log("REQUEST URL:", url);
+      console.log("AUTH TOKEN EXISTS:", !!localStorage.getItem("authToken"));
+
+
+      // ==============================
+      // AJAX SAVE / UPDATE
+      // ==============================
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: getAuthHeaders(),
+        data: JSON.stringify(dischargeData),
+
+        success: function (res) {
+          console.log("SAVE SUCCESS:", res);
+
+          if (
+                  res.status === 0 ||
+                  res.statusCode === 200 ||
+                  res.code === "00" ||
+                  res === true // සමහර backend වල success වෙලා true විතරක් එන්න පුළුවන්
+          ) {
+            alert(
+                    isUpdate
+                            ? "Discharge updated successfully!"
+                            : "Discharge processed successfully!"
+            );
+
+            resetForm();
+            loadAllDischarges();
+
+          } else {
+            alert(res.message || "Operation failed.");
+          }
+        },
+
+        error: function (xhr) {
+          console.log("SAVE ERROR STATUS:", xhr.status);
+          console.log("SAVE ERROR RESPONSE:", xhr.responseText);
+
+          if (xhr.status === 401) {
+            alert("Your session has expired or the token is invalid.\n\nPlease login again.");
+            localStorage.removeItem("authToken");
+            window.location.href = "login.html";
+            return;
+          }
+
+          if (xhr.status === 403) {
+            alert("You don't have permission to process a discharge.");
+            return;
+          }
+
+          alert(
+                  "Save Error\n\n" +
+                  "HTTP Status: " + xhr.status +
+                  "\n\nResponse:\n" +
+                  xhr.responseText
+          );
+        }
+      });
+    });
+
+
+    // ==============================
+    // SEARCH DISCHARGE
+    // ==============================
+    $('#searchDischargeInput').on('input', function () {
+      const query = $(this).val().trim();
+
+      if (query === '') {
+        $('#dischargeFormCard').show();
+        loadAllDischarges();
+        return;
+      }
+
+      $('#dischargeFormCard').hide();
+
+      $.ajax({
+        url: `/v1/discharge/filter?dischargeId=${encodeURIComponent(query)}`,
+        type: 'GET',
+        headers: getAuthHeaders(),
+
+        success: function (res) {
+          console.log("FILTER RESPONSE:", res);
+          renderDischarges(res.body || []);
+        },
+
+        error: function (xhr) {
+          console.log("FILTER ERROR:", xhr.status, xhr.responseText);
+
+          if (xhr.status === 401) {
+            localStorage.removeItem("authToken");
+            window.location.href = "login.html";
+            return;
+          }
+
+          $('#dischargeTableBody').html(
+                  '<tr>' +
+                  '<td colspan="7" style="text-align:center; color:gray;">' +
+                  'No discharges found.' +
+                  '</td>' +
+                  '</tr>'
+          );
+        }
+      });
+    });
+
+  });
+
+
+
+  // ==============================
+  // LOAD ADMISSIONS
+  // ==============================
+  function loadAdmissionsDropdown() {
+    $.ajax({
+      url: '/v1/admission',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        console.log("ADMISSIONS RESPONSE:", res);
+        const select = $('#admissionId');
+        select.empty();
+        select.append('<option value="">Select admission</option>');
+
+        const admissions = res.body || [];
+
+        admissions.forEach(function (adm) {
+          select.append(
+                  `<option value="${adm.admissionId}">
+              Admission #${adm.admissionId} (Patient ID: ${adm.patientId})
+            </option>`
+          );
+        });
+      },
+
+      error: function (xhr) {
+        console.log("ADMISSION ERROR:", xhr.status, xhr.responseText);
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD DOCTORS
+  // ==============================
+  function loadDoctorsDropdown() {
+    $.ajax({
+      url: '/v1/doctors',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        console.log("DOCTORS RESPONSE:", res);
+        const select = $('#doctorId');
+        select.empty();
+        select.append('<option value="">Select doctor</option>');
+
+        const doctors = res.body || [];
+
+        doctors.forEach(function (doc) {
+          select.append(
+                  `<option value="${doc.doctorId}">
+              [ID: ${doc.doctorId}] ${doc.doctorName}
+            </option>`
+          );
+        });
+      },
+
+      error: function (xhr) {
+        console.log("DOCTOR ERROR:", xhr.status, xhr.responseText);
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD ALL DISCHARGES
+  // ==============================
+  function loadAllDischarges() {
+    $.ajax({
+      url: '/v1/discharge',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        console.log("DISCHARGES RESPONSE:", res);
+        renderDischarges(res.body || []);
+      },
+
+      error: function (xhr) {
+        console.log("LOAD DISCHARGES ERROR:", xhr.status, xhr.responseText);
+
+        if (xhr.status === 401) {
+          localStorage.removeItem("authToken");
+          window.location.href = "login.html";
+          return;
+        }
+
+        $('#dischargeTableBody').html(
+                '<tr>' +
+                '<td colspan="7" style="text-align:center; color:red; padding:20px;">' +
+                'Failed to load discharges.' +
+                '</td>' +
+                '</tr>'
+        );
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // RENDER DISCHARGES
+  // ==============================
+  function renderDischarges(discharges) {
+    const tbody = $('#dischargeTableBody');
+    tbody.empty();
+
+    if (!discharges || discharges.length === 0) {
+      tbody.html(
+              '<tr>' +
+              '<td colspan="7" style="text-align:center; color:gray; padding:20px;">' +
+              'No discharges found.' +
+              '</td>' +
+              '</tr>'
+      );
+      return;
+    }
+
+    discharges.forEach(function (d) {
+      let badgeClass = 'badge-success';
+
+      if (d.dischargeStatus === 'PENDING') {
+        badgeClass = 'badge-warning';
+      }
+
+      if (d.dischargeStatus === 'APPROVED') {
+        badgeClass = 'badge-primary';
+      }
+
+      const row = `
+        <tr>
+          <td>${d.dischargeId}</td>
+          <td><strong>#${d.admissionId}</strong></td>
+          <td>${d.doctorId}</td>
+          <td>${d.dischargeDate || '-'}</td>
+          <td>${d.remarks || '-'}</td>
+          <td>
+            <span class="badge ${badgeClass}">
+              ${d.dischargeStatus}
+            </span>
+          </td>
+          <td>
+            <button
+              class="btn btn-light"
+              style="padding: 2px 8px; font-size: 11px;"
+              onclick='editDischarge(${JSON.stringify(d)})'
+            >
+              Edit
+            </button>
+          </td>
+        </tr>
+      `;
+
+      tbody.append(row);
+    });
+  }
+
+
+
+  // ==============================
+  // EDIT DISCHARGE
+  // ==============================
+  function editDischarge(d) {
+    $('#dischargeId').val(d.dischargeId);
+    $('#admissionId').val(d.admissionId);
+    $('#doctorId').val(d.doctorId);
+    $('#dischargeDate').val(d.dischargeDate);
+    $('#dischargeStatus').val(d.dischargeStatus);
+    $('#remarks').val(d.remarks);
+
+    $('#formTitle').text('Update Patient Discharge');
+    $('#saveBtn').text('Update Discharge');
+
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+
+
+  // ==============================
+  // RESET FORM
+  // ==============================
+  function resetForm() {
+    $('#dischargeForm')[0].reset();
+    $('#dischargeId').val('');
+    $('#formTitle').text('Process Patient Discharge');
+    $('#saveBtn').text('Process Discharge');
+  }
+
+</script>
 
 </body>
 </html>

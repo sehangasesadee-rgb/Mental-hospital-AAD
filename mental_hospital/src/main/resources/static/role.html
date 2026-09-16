@@ -62,7 +62,8 @@
         </div>
 
         <div class="top-actions">
-            <input class="search" placeholder="Search roles...">
+            <!-- Search input with ID for filtering -->
+            <input type="text" id="searchRoleInput" class="search" placeholder="Search roles...">
             <div class="notification">🔔</div>
 
             <div class="profile">
@@ -77,35 +78,35 @@
     </div>
 
 
-    <div class="card section">
+    <!-- Form Card with ID to hide/show during search -->
+    <div class="card section" id="roleFormCard">
 
         <div class="card-header">
-
             <div>
-                <h3>Create New Role</h3>
+                <h3 id="formTitle">Create New Role</h3>
                 <p style="font-size:10px;color:#999;margin-top:4px">
                     Add a new access role for system users.
                 </p>
             </div>
-
         </div>
 
 
-        <form>
+        <form id="roleForm">
+            <!-- Hidden Input for Update (RoleId) -->
+            <input type="hidden" id="roleId">
 
             <div class="form-grid">
 
                 <div class="form-group">
                     <label>Role Name</label>
-                    <input type="text"
-                           placeholder="Enter role name">
+                    <input type="text" id="roleName" placeholder="Enter role name" required>
                 </div>
 
                 <div class="form-group">
                     <label>Role Status</label>
-                    <select>
-                        <option>ACTIVE</option>
-                        <option>INACTIVE</option>
+                    <select id="roleStatus" required>
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="INACTIVE">INACTIVE</option>
                     </select>
                 </div>
 
@@ -113,108 +114,11 @@
 
 
             <div class="form-actions">
-
-                <button type="reset"
-                        class="btn btn-light">
-                    Clear
-                </button>
-
-                <button class="btn btn-primary">
-                    + Create Role
-                </button>
-
+                <button type="reset" id="resetBtn" class="btn btn-light">Clear</button>
+                <button type="submit" id="saveBtn" class="btn btn-primary">+ Create Role</button>
             </div>
 
         </form>
-
-    </div>
-
-
-    <div class="grid-3">
-
-
-        <div class="card">
-
-            <div class="stat-icon purple">
-                🔐
-            </div>
-
-            <h3 style="margin-top:15px">
-                ADMIN
-            </h3>
-
-            <p style="font-size:11px;color:#888;margin:8px 0 15px">
-                Full system access.
-            </p>
-
-            <span class="badge badge-success">
-                Active
-            </span>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="stat-icon blue">
-                🩺
-            </div>
-
-            <h3 style="margin-top:15px">
-                DOCTOR
-            </h3>
-
-            <p style="font-size:11px;color:#888;margin:8px 0 15px">
-                Patient care and medical records.
-            </p>
-
-            <span class="badge badge-success">
-                Active
-            </span>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="stat-icon green">
-                👩‍⚕️
-            </div>
-
-            <h3 style="margin-top:15px">
-                NURSE
-            </h3>
-
-            <p style="font-size:11px;color:#888;margin:8px 0 15px">
-                Nursing and ward management.
-            </p>
-
-            <span class="badge badge-success">
-                Active
-            </span>
-
-        </div>
-
-
-        <div class="card">
-
-            <div class="stat-icon orange">
-                🧾
-            </div>
-
-            <h3 style="margin-top:15px">
-                RECEPTIONIST
-            </h3>
-
-            <p style="font-size:11px;color:#888;margin:8px 0 15px">
-                Appointments and patient registration.
-            </p>
-
-            <span class="badge badge-success">
-                Active
-            </span>
-
-        </div>
 
     </div>
 
@@ -230,111 +134,18 @@
             <table>
 
                 <thead>
-
                 <tr>
                     <th>Role ID</th>
                     <th>Role Name</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
-
                 </thead>
 
-
-                <tbody>
-
-<!--                <tr>-->
-
-<!--                    <td>#1</td>-->
-
-<!--                    <td>-->
-<!--                        <strong>ADMIN</strong>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-success">-->
-<!--                            Active-->
-<!--                        </span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <button class="btn btn-light">-->
-<!--                            Edit-->
-<!--                        </button>-->
-<!--                    </td>-->
-
-<!--                </tr>-->
-
-
-<!--                <tr>-->
-
-<!--                    <td>#2</td>-->
-
-<!--                    <td>-->
-<!--                        <strong>DOCTOR</strong>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-success">-->
-<!--                            Active-->
-<!--                        </span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <button class="btn btn-light">-->
-<!--                            Edit-->
-<!--                        </button>-->
-<!--                    </td>-->
-
-<!--                </tr>-->
-
-
-<!--                <tr>-->
-
-<!--                    <td>#3</td>-->
-
-<!--                    <td>-->
-<!--                        <strong>NURSE</strong>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-success">-->
-<!--                            Active-->
-<!--                        </span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <button class="btn btn-light">-->
-<!--                            Edit-->
-<!--                        </button>-->
-<!--                    </td>-->
-
-<!--                </tr>-->
-
-
-<!--                <tr>-->
-
-<!--                    <td>#4</td>-->
-
-<!--                    <td>-->
-<!--                        <strong>RECEPTIONIST</strong>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-success">-->
-<!--                            Active-->
-<!--                        </span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <button class="btn btn-light">-->
-<!--                            Edit-->
-<!--                        </button>-->
-<!--                    </td>-->
-
-<!--                </tr>-->
-
-<!--                </tbody>-->
+                <!-- Table Body with ID for dynamic rendering -->
+                <tbody id="roleTableBody">
+                <!-- Dynamic Rows will load here -->
+                </tbody>
 
             </table>
 
@@ -343,6 +154,239 @@
     </div>
 
 </main>
+
+
+<!-- jQuery Scripting -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+
+    // ==============================
+    // GET CURRENT JWT TOKEN
+    // ==============================
+    function getAuthHeaders() {
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+            alert("Session expired. Please login again.");
+            window.location.href = "login.html";
+            return {};
+        }
+
+        return {
+            "Authorization": "Bearer " + token
+        };
+    }
+
+
+    // ==============================
+    // PAGE LOAD
+    // ==============================
+    $(document).ready(function () {
+
+        loadAllRoles();
+
+
+        // ==============================
+        // RESET BUTTON
+        // ==============================
+        $('#resetBtn').on('click', function () {
+            resetForm();
+        });
+
+
+        // ==============================
+        // SAVE / UPDATE ROLE
+        // ==============================
+        $('#roleForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const rId = $('#roleId').val();
+            const roleName = $('#roleName').val().trim();
+            const roleStatus = $('#roleStatus').val();
+
+
+            // Validation
+            if (!roleName) {
+                alert("Please enter role name.");
+                return;
+            }
+
+
+            const roleData = {
+                roleId: rId ? parseInt(rId) : null,
+                roleName: roleName,
+                roleStatus: roleStatus
+            };
+
+            const isUpdate = !!rId;
+            const url = '/v1/roles';
+            const type = isUpdate ? 'PUT' : 'POST';
+
+
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: 'application/json',
+                headers: getAuthHeaders(),
+                data: JSON.stringify(roleData),
+
+                success: function (res) {
+                    alert(isUpdate ? "Role updated successfully!" : "Role created successfully!");
+                    resetForm();
+                    loadAllRoles();
+                },
+
+                error: function (xhr) {
+                    alert("Error: " + xhr.status + "\n" + xhr.responseText);
+                }
+            });
+
+        });
+
+
+        // ==============================
+        // SEARCH / FILTER ROLE
+        // ==============================
+        $('#searchRoleInput').on('input', function () {
+            const query = $(this).val().trim();
+
+            if (query === '') {
+                $('#roleFormCard').show(); // Show form when search is empty
+                loadAllRoles();
+                return;
+            }
+
+            $('#roleFormCard').hide(); // Hide form during search
+
+            $.ajax({
+                url: `/v1/roles/filter?RoleName=${encodeURIComponent(query)}`,
+                type: 'GET',
+                headers: getAuthHeaders(),
+
+                success: function (res) {
+                    renderRoles(res.body || []);
+                },
+
+                error: function (xhr) {
+                    $('#roleTableBody').html(
+                        '<tr>' +
+                        '<td colspan="4" style="text-align:center; color:gray; padding:20px;">' +
+                        'No roles found.' +
+                        '</td>' +
+                        '</tr>'
+                    );
+                }
+            });
+
+        });
+
+    });
+
+
+
+    // ==============================
+    // LOAD ALL ROLES
+    // ==============================
+    function loadAllRoles() {
+        $.ajax({
+            url: '/v1/roles',
+            type: 'GET',
+            headers: getAuthHeaders(),
+
+            success: function (res) {
+                renderRoles(res.body || []);
+            },
+
+            error: function (xhr) {
+                $('#roleTableBody').html(
+                    '<tr>' +
+                    '<td colspan="4" style="text-align:center; color:red; padding:20px;">' +
+                    'Failed to load roles.' +
+                    '</td>' +
+                    '</tr>'
+                );
+            }
+        });
+    }
+
+
+
+    // ==============================
+    // RENDER ROLES TABLE
+    // ==============================
+    function renderRoles(roles) {
+        const tbody = $('#roleTableBody');
+        tbody.empty();
+
+        if (!roles || roles.length === 0) {
+            tbody.html(
+                '<tr>' +
+                '<td colspan="4" style="text-align:center; color:gray; padding:20px;">' +
+                'No roles found.' +
+                '</td>' +
+                '</tr>'
+            );
+            return;
+        }
+
+        roles.forEach(function (r) {
+            let badgeClass = 'badge-success';
+            if (r.roleStatus === 'INACTIVE') {
+                badgeClass = 'badge-warning';
+            }
+
+            const row = `
+        <tr>
+          <td>#${r.roleId}</td>
+          <td><strong>${r.roleName}</strong></td>
+          <td>
+            <span class="badge ${badgeClass}">
+              ${r.roleStatus || 'ACTIVE'}
+            </span>
+          </td>
+          <td>
+            <button
+              class="btn btn-light"
+              onclick='editRole(${JSON.stringify(r)})'
+            >
+              Edit
+            </button>
+          </td>
+        </tr>
+      `;
+            tbody.append(row);
+        });
+    }
+
+
+
+    // ==============================
+    // EDIT ROLE
+    // ==============================
+    function editRole(r) {
+        $('#roleId').val(r.roleId);
+        $('#roleName').val(r.roleName);
+        $('#roleStatus').val(r.roleStatus);
+
+        $('#formTitle').text('Update Role');
+        $('#saveBtn').text('Update Role');
+
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+    }
+
+
+
+    // ==============================
+    // RESET FORM
+    // ==============================
+    function resetForm() {
+        $('#roleForm')[0].reset();
+        $('#roleId').val('');
+        $('#formTitle').text('Create New Role');
+        $('#saveBtn').text('+ Create Role');
+    }
+
+</script>
 
 </body>
 </html>

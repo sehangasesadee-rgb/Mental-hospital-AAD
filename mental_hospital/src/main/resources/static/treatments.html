@@ -62,7 +62,8 @@
     </div>
 
     <div class="top-actions">
-      <input class="search" placeholder="Search treatments...">
+      <!-- Search input with ID for filtering -->
+      <input type="text" id="searchTreatmentInput" class="search" placeholder="Search treatments by ID...">
       <div class="notification">🔔</div>
 
       <div class="profile">
@@ -77,63 +78,62 @@
   </div>
 
 
-  <div class="card section">
+  <!-- Form Card with ID to hide/show during search -->
+  <div class="card section" id="treatmentFormCard">
 
     <div class="card-header">
-      <h3>Create Treatment Plan</h3>
+      <h3 id="formTitle">Create Treatment Plan</h3>
     </div>
 
-    <form>
+    <form id="treatmentForm">
+      <!-- Hidden Input for Update (TreatmentId) -->
+      <input type="hidden" id="treatmentId">
 
       <div class="form-grid">
 
         <div class="form-group">
           <label>Patient</label>
-          <select>
-            <option>Select patient</option>
-            <option>Nethmi Silva</option>
-            <option>Ravindu Perera</option>
+          <select id="patientId" required>
+            <option value="">Select patient</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Doctor</label>
-          <select>
-            <option>Select doctor</option>
-            <option>Dr. Kasun Perera</option>
-            <option>Dr. Amali Fernando</option>
+          <select id="doctorId" required>
+            <option value="">Select doctor</option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Treatment Name</label>
-          <input type="text" placeholder="Enter treatment name">
+          <input type="text" id="treatmentName" placeholder="Enter treatment name" required>
         </div>
 
         <div class="form-group">
           <label>Treatment Date</label>
-          <input type="date">
+          <input type="date" id="treatmentDate" required>
         </div>
 
         <div class="form-group">
           <label>Treatment Status</label>
-          <select>
-            <option>ONGOING</option>
-            <option>COMPLETED</option>
-            <option>CANCELLED</option>
+          <select id="treatmentStatus" required>
+            <option value="ONGOING">ONGOING</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="CANCELLED">CANCELLED</option>
           </select>
         </div>
 
         <div class="form-group full">
           <label>Description</label>
-          <textarea placeholder="Enter treatment details"></textarea>
+          <textarea id="description" placeholder="Enter treatment details"></textarea>
         </div>
 
       </div>
 
       <div class="form-actions">
-        <button type="reset" class="btn btn-light">Clear</button>
-        <button class="btn btn-primary">+ Save Treatment</button>
+        <button type="reset" id="resetBtn" class="btn btn-light">Clear</button>
+        <button type="submit" id="saveBtn" class="btn btn-primary">+ Save Treatment</button>
       </div>
 
     </form>
@@ -141,79 +141,347 @@
   </div>
 
 
-  <div class="grid-3">
-
-    <div class="card">
-
-      <div class="card-header">
-        <h3>Therapy Sessions</h3>
-        <span>Ongoing</span>
-      </div>
-
-      <h2 style="font-size:20px">Nethmi Silva</h2>
-
-      <p style="font-size:11px;color:#888;margin:8px 0">
-        Individual therapy sessions
-      </p>
-
-      <span class="badge badge-success">Ongoing</span>
-
-      <div style="margin-top:18px">
-        <p style="font-size:10px;color:#999">Doctor</p>
-        <strong style="font-size:11px">Dr. Amali Fernando</strong>
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="card-header">
-        <h3>Counseling</h3>
-        <span>Active</span>
-      </div>
-
-      <h2 style="font-size:20px">Ravindu Perera</h2>
-
-      <p style="font-size:11px;color:#888;margin:8px 0">
-        Behavioral counseling program
-      </p>
-
-      <span class="badge badge-blue">Active</span>
-
-      <div style="margin-top:18px">
-        <p style="font-size:10px;color:#999">Doctor</p>
-        <strong style="font-size:11px">Dr. Tharindu Silva</strong>
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="card-header">
-        <h3>Assessment</h3>
-        <span>Completed</span>
-      </div>
-
-      <h2 style="font-size:20px">Sewmi Madushika</h2>
-
-      <p style="font-size:11px;color:#888;margin:8px 0">
-        Psychological assessment
-      </p>
-
-      <span class="badge badge-success">Completed</span>
-
-      <div style="margin-top:18px">
-        <p style="font-size:10px;color:#999">Doctor</p>
-        <strong style="font-size:11px">Dr. Kasun Perera</strong>
-      </div>
-
-    </div>
-
+  <!-- Grid Container with ID for dynamic rendering -->
+  <div class="grid-3" id="treatmentGridContainer">
+    <!-- Dynamic Treatment Cards will load here -->
   </div>
 
 </main>
+
+
+<!-- jQuery Scripting -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+
+  // Global Maps to hold names for ID mapping
+  let patientsMap = {};
+  let doctorsMap = {};
+
+  // ==============================
+  // GET CURRENT JWT TOKEN
+  // ==============================
+  function getAuthHeaders() {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      alert("Session expired. Please login again.");
+      window.location.href = "login.html";
+      return {};
+    }
+
+    return {
+      "Authorization": "Bearer " + token
+    };
+  }
+
+
+  // ==============================
+  // PAGE LOAD
+  // ==============================
+  $(document).ready(function () {
+
+    loadPatientDropdown();
+    loadDoctorDropdown();
+    loadAllTreatments();
+
+
+    // ==============================
+    // RESET BUTTON
+    // ==============================
+    $('#resetBtn').on('click', function () {
+      resetForm();
+    });
+
+
+    // ==============================
+    // SAVE / UPDATE TREATMENT
+    // ==============================
+    $('#treatmentForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const tId = $('#treatmentId').val();
+      const patientId = $('#patientId').val();
+      const doctorId = $('#doctorId').val();
+      const treatmentName = $('#treatmentName').val().trim();
+      const treatmentDate = $('#treatmentDate').val();
+      const treatmentStatus = $('#treatmentStatus').val();
+      const description = $('#description').val().trim();
+
+
+      // Validation
+      if (!patientId) {
+        alert("Please select a patient.");
+        return;
+      }
+      if (!doctorId) {
+        alert("Please select a doctor.");
+        return;
+      }
+      if (!treatmentName) {
+        alert("Please enter treatment name.");
+        return;
+      }
+      if (!treatmentDate) {
+        alert("Please select a treatment date.");
+        return;
+      }
+
+
+      const treatmentData = {
+        treatmentId: tId ? parseInt(tId) : null,
+        treatmentName: treatmentName,
+        description: description,
+        treatmentDate: treatmentDate,
+        treatmentStatus: treatmentStatus,
+        patientId: parseInt(patientId),
+        doctorId: parseInt(doctorId)
+      };
+
+      const isUpdate = !!tId;
+      const url = '/v1/treatment';
+      const type = isUpdate ? 'PUT' : 'POST';
+
+
+      $.ajax({
+        url: url,
+        type: type,
+        contentType: 'application/json',
+        headers: getAuthHeaders(),
+        data: JSON.stringify(treatmentData),
+
+        success: function (res) {
+          alert(isUpdate ? "Treatment updated successfully!" : "Treatment created successfully!");
+          resetForm();
+          loadAllTreatments();
+        },
+
+        error: function (xhr) {
+          alert("Error: " + xhr.status + "\n" + xhr.responseText);
+        }
+      });
+
+    });
+
+
+    // ==============================
+    // SEARCH / FILTER TREATMENT
+    // ==============================
+    $('#searchTreatmentInput').on('input', function () {
+      const query = $(this).val().trim();
+
+      if (query === '') {
+        $('#treatmentFormCard').show(); // Show form when search is empty
+        loadAllTreatments();
+        return;
+      }
+
+      $('#treatmentFormCard').hide(); // Hide form during search
+
+      $.ajax({
+        url: `/v1/treatment/filter?id=${encodeURIComponent(query)}`,
+        type: 'GET',
+        headers: getAuthHeaders(),
+
+        success: function (res) {
+          renderTreatments(res.body || []);
+        },
+
+        error: function (xhr) {
+          $('#treatmentGridContainer').html(
+                  '<div style="grid-column: span 3; text-align:center; color:gray; padding:20px;">' +
+                  'No treatments found.' +
+                  '</div>'
+          );
+        }
+      });
+
+    });
+
+  });
+
+
+
+  // ==============================
+  // LOAD PATIENT DROPDOWN
+  // ==============================
+  function loadPatientDropdown() {
+    $.ajax({
+      url: '/v1/patients',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#patientId');
+        select.empty();
+        select.append('<option value="">Select patient</option>');
+
+        const patients = res.body || [];
+        patients.forEach(function (p) {
+          patientsMap[p.patientId] = p.patientName;
+          select.append(`<option value="${p.patientId}">${p.patientName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load patients");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD DOCTOR DROPDOWN
+  // ==============================
+  function loadDoctorDropdown() {
+    $.ajax({
+      url: '/v1/doctors',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        const select = $('#doctorId');
+        select.empty();
+        select.append('<option value="">Select doctor</option>');
+
+        const doctors = res.body || [];
+        doctors.forEach(function (d) {
+          doctorsMap[d.doctorId] = d.doctorName;
+          select.append(`<option value="${d.doctorId}">${d.doctorName}</option>`);
+        });
+      },
+
+      error: function (xhr) {
+        console.log("Failed to load doctors");
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // LOAD ALL TREATMENTS
+  // ==============================
+  function loadAllTreatments() {
+    $.ajax({
+      url: '/v1/treatment',
+      type: 'GET',
+      headers: getAuthHeaders(),
+
+      success: function (res) {
+        renderTreatments(res.body || []);
+      },
+
+      error: function (xhr) {
+        $('#treatmentGridContainer').html(
+                '<div style="grid-column: span 3; text-align:center; color:red; padding:20px;">' +
+                'Failed to load treatments.' +
+                '</div>'
+        );
+      }
+    });
+  }
+
+
+
+  // ==============================
+  // RENDER TREATMENTS GRID
+  // ==============================
+  function renderTreatments(treatments) {
+    const container = $('#treatmentGridContainer');
+    container.empty();
+
+    if (!treatments || treatments.length === 0) {
+      container.html(
+              '<div style="grid-column: span 3; text-align:center; color:gray; padding:20px;">' +
+              'No treatments found.' +
+              '</div>'
+      );
+      return;
+    }
+
+    treatments.forEach(function (t) {
+      let badgeClass = 'badge-success';
+      if (t.treatmentStatus === 'CANCELLED') {
+        badgeClass = 'badge-warning';
+      } else if (t.treatmentStatus === 'COMPLETED') {
+        badgeClass = 'badge-success';
+      } else {
+        badgeClass = 'badge-blue';
+      }
+
+      const patientName = patientsMap[t.patientId] || ('Patient #' + t.patientId);
+      const doctorName = doctorsMap[t.doctorId] || ('Doctor #' + t.doctorId);
+
+      const card = `
+        <div class="card">
+
+          <div class="card-header">
+            <h3>${t.treatmentName}</h3>
+            <span>ID: #${t.treatmentId}</span>
+          </div>
+
+          <h2 style="font-size:20px">${patientName}</h2>
+
+          <p style="font-size:11px;color:#888;margin:8px 0">
+            ${t.description || 'No description provided'}
+          </p>
+
+          <span class="badge ${badgeClass}">${t.treatmentStatus}</span>
+
+          <div style="margin-top:18px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <p style="font-size:10px;color:#999">Doctor</p>
+              <strong style="font-size:11px">${doctorName}</strong>
+            </div>
+            <button
+              class="btn btn-light"
+              style="padding: 4px 10px; font-size: 11px;"
+              onclick='editTreatment(${JSON.stringify(t)})'
+            >
+              Edit
+            </button>
+          </div>
+
+        </div>
+      `;
+      container.append(card);
+    });
+  }
+
+
+
+  // ==============================
+  // EDIT TREATMENT
+  // ==============================
+  function editTreatment(t) {
+    $('#treatmentId').val(t.treatmentId);
+    $('#patientId').val(t.patientId);
+    $('#doctorId').val(t.doctorId);
+    $('#treatmentName').val(t.treatmentName);
+    $('#treatmentDate').val(t.treatmentDate);
+    $('#treatmentStatus').val(t.treatmentStatus);
+    $('#description').val(t.description);
+
+    $('#formTitle').text('Update Treatment Plan');
+    $('#saveBtn').text('Update Treatment');
+
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  }
+
+
+
+  // ==============================
+  // RESET FORM
+  // ==============================
+  function resetForm() {
+    $('#treatmentForm')[0].reset();
+    $('#treatmentId').val('');
+    $('#formTitle').text('Create Treatment Plan');
+    $('#saveBtn').text('+ Save Treatment');
+  }
+
+</script>
 
 </body>
 </html>

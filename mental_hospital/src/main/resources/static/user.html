@@ -62,7 +62,8 @@
         </div>
 
         <div class="top-actions">
-            <input class="search" placeholder="Search users...">
+            <!-- Search input with ID for filtering -->
+            <input type="text" id="searchUserInput" class="search" placeholder="Search users...">
             <div class="notification">🔔</div>
 
             <div class="profile">
@@ -77,50 +78,49 @@
     </div>
 
 
-    <div class="card section">
+    <!-- Form Card with ID to hide/show during search -->
+    <div class="card section" id="userFormCard">
 
         <div class="card-header">
-            <h3>Create System User</h3>
+            <h3 id="formTitle">Create System User</h3>
         </div>
 
-        <form>
+        <form id="userForm">
+            <!-- Hidden Input for Update (UserId) -->
+            <input type="hidden" id="userId">
 
             <div class="form-grid">
 
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" placeholder="Enter username">
+                    <input type="text" id="userName" placeholder="Enter username" required>
                 </div>
 
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" placeholder="Enter password">
+                    <input type="password" id="userPassword" placeholder="Enter password" required>
                 </div>
 
                 <div class="form-group">
                     <label>Role</label>
-                    <select>
-                        <option>Select role</option>
-                        <option>ADMIN</option>
-                        <option>DOCTOR</option>
-                        <option>NURSE</option>
-                        <option>RECEPTIONIST</option>
+                    <select id="roleId" required>
+                        <option value="">Select role</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>User Status</label>
-                    <select>
-                        <option>ACTIVE</option>
-                        <option>INACTIVE</option>
+                    <select id="userStatus" required>
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="INACTIVE">INACTIVE</option>
                     </select>
                 </div>
 
             </div>
 
             <div class="form-actions">
-                <button type="reset" class="btn btn-light">Clear</button>
-                <button class="btn btn-primary">+ Create User</button>
+                <button type="reset" id="resetBtn" class="btn btn-light">Clear</button>
+                <button type="submit" id="saveBtn" class="btn btn-primary">+ Create User</button>
             </div>
 
         </form>
@@ -142,85 +142,15 @@
                 <tr>
                     <th>User</th>
                     <th>Username</th>
-                    <th>Role</th>
+                    <th>Role ID</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
                 </thead>
 
-                <tbody>
-
-<!--                <tr>-->
-<!--                    <td>-->
-<!--                        <div class="patient-cell">-->
-<!--                            <div class="small-avatar">AD</div>-->
-<!--                            <strong>Administrator</strong>-->
-<!--                        </div>-->
-<!--                    </td>-->
-
-<!--                    <td>admin</td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-purple">ADMIN</span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-success">Active</span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <button class="btn btn-light">Edit</button>-->
-<!--                    </td>-->
-<!--                </tr>-->
-
-
-<!--                <tr>-->
-<!--                    <td>-->
-<!--                        <div class="patient-cell">-->
-<!--                            <div class="small-avatar">KP</div>-->
-<!--                            <strong>Dr. Kasun</strong>-->
-<!--                        </div>-->
-<!--                    </td>-->
-
-<!--                    <td>kasun.doctor</td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-blue">DOCTOR</span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-success">Active</span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <button class="btn btn-light">Edit</button>-->
-<!--                    </td>-->
-<!--                </tr>-->
-
-
-<!--                <tr>-->
-<!--                    <td>-->
-<!--                        <div class="patient-cell">-->
-<!--                            <div class="small-avatar">ND</div>-->
-<!--                            <strong>Nimali Dias</strong>-->
-<!--                        </div>-->
-<!--                    </td>-->
-
-<!--                    <td>nimali.nurse</td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-purple">NURSE</span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <span class="badge badge-success">Active</span>-->
-<!--                    </td>-->
-
-<!--                    <td>-->
-<!--                        <button class="btn btn-light">Edit</button>-->
-<!--                    </td>-->
-<!--                </tr>-->
-
+                <!-- Table Body with ID for dynamic rendering -->
+                <tbody id="userTableBody">
+                <!-- Dynamic Rows will load here -->
                 </tbody>
 
             </table>
@@ -230,6 +160,288 @@
     </div>
 
 </main>
+
+
+<!-- jQuery Scripting -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+
+    // ==============================
+    // GET CURRENT JWT TOKEN
+    // ==============================
+    function getAuthHeaders() {
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+            alert("Session expired. Please login again.");
+            window.location.href = "login.html";
+            return {};
+        }
+
+        return {
+            "Authorization": "Bearer " + token
+        };
+    }
+
+
+    // ==============================
+    // PAGE LOAD
+    // ==============================
+    $(document).ready(function () {
+
+        loadRoleDropdown();
+        loadAllUsers();
+
+
+        // ==============================
+        // RESET BUTTON
+        // ==============================
+        $('#resetBtn').on('click', function () {
+            resetForm();
+        });
+
+
+        // ==============================
+        // SAVE / UPDATE USER
+        // ==============================
+        $('#userForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const uId = $('#userId').val();
+            const userName = $('#userName').val().trim();
+            const userPassword = $('#userPassword').val().trim();
+            const roleId = $('#roleId').val();
+            const userStatus = $('#userStatus').val();
+
+
+            // Validation
+            if (!userName) {
+                alert("Please enter username.");
+                return;
+            }
+
+            if (!roleId) {
+                alert("Please select a role.");
+                return;
+            }
+
+
+            const userData = {
+                userId: uId ? parseInt(uId) : null,
+                userName: userName,
+                userPassword: userPassword,
+                userStatus: userStatus,
+                roleId: parseInt(roleId)
+            };
+
+            const isUpdate = !!uId;
+            const url = '/v1/users';
+            const type = isUpdate ? 'PUT' : 'POST';
+
+
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: 'application/json',
+                headers: getAuthHeaders(),
+                data: JSON.stringify(userData),
+
+                success: function (res) {
+                    alert(isUpdate ? "User updated successfully!" : "User created successfully!");
+                    resetForm();
+                    loadAllUsers();
+                },
+
+                error: function (xhr) {
+                    alert("Error: " + xhr.status + "\n" + xhr.responseText);
+                }
+            });
+
+        });
+
+
+        // ==============================
+        // SEARCH / FILTER USER
+        // ==============================
+        $('#searchUserInput').on('input', function () {
+            const query = $(this).val().trim();
+
+            if (query === '') {
+                $('#userFormCard').show(); // Show form when search is empty
+                loadAllUsers();
+                return;
+            }
+
+            $('#userFormCard').hide(); // Hide form during search
+
+            $.ajax({
+                url: `/v1/users/filter?userName=${encodeURIComponent(query)}`,
+                type: 'GET',
+                headers: getAuthHeaders(),
+
+                success: function (res) {
+                    renderUsers(res.body || []);
+                },
+
+                error: function (xhr) {
+                    $('#userTableBody').html(
+                        '<tr>' +
+                        '<td colspan="5" style="text-align:center; color:gray; padding:20px;">' +
+                        'No users found.' +
+                        '</td>' +
+                        '</tr>'
+                    );
+                }
+            });
+
+        });
+
+    });
+
+
+
+    // ==============================
+    // LOAD ROLE DROPDOWN
+    // ==============================
+    function loadRoleDropdown() {
+        $.ajax({
+            url: '/v1/roles',
+            type: 'GET',
+            headers: getAuthHeaders(),
+
+            success: function (res) {
+                const select = $('#roleId');
+                select.empty();
+                select.append('<option value="">Select role</option>');
+
+                const roles = res.body || [];
+
+                roles.forEach(function (role) {
+                    select.append(
+                        `<option value="${role.roleId}">${role.roleName}</option>`
+                    );
+                });
+            },
+
+            error: function (xhr) {
+                console.log("Failed to load roles dropdown");
+            }
+        });
+    }
+
+
+
+    // ==============================
+    // LOAD ALL USERS
+    // ==============================
+    function loadAllUsers() {
+        $.ajax({
+            url: '/v1/users',
+            type: 'GET',
+            headers: getAuthHeaders(),
+
+            success: function (res) {
+                renderUsers(res.body || []);
+            },
+
+            error: function (xhr) {
+                $('#userTableBody').html(
+                    '<tr>' +
+                    '<td colspan="5" style="text-align:center; color:red; padding:20px;">' +
+                    'Failed to load users.' +
+                    '</td>' +
+                    '</tr>'
+                );
+            }
+        });
+    }
+
+
+
+    // ==============================
+    // RENDER USERS TABLE
+    // ==============================
+    function renderUsers(users) {
+        const tbody = $('#userTableBody');
+        tbody.empty();
+
+        if (!users || users.length === 0) {
+            tbody.html(
+                '<tr>' +
+                '<td colspan="5" style="text-align:center; color:gray; padding:20px;">' +
+                'No users found.' +
+                '</td>' +
+                '</tr>'
+            );
+            return;
+        }
+
+        users.forEach(function (u) {
+            let badgeClass = 'badge-success';
+            if (u.userStatus === 'INACTIVE') {
+                badgeClass = 'badge-warning';
+            }
+
+            const row = `
+        <tr>
+          <td>
+            <div class="patient-cell">
+              <div class="small-avatar">${u.userName ? u.userName.substring(0, 2).toUpperCase() : 'US'}</div>
+              <strong>${u.userName}</strong>
+            </div>
+          </td>
+          <td>${u.userName}</td>
+          <td><span class="badge badge-purple">Role ID: ${u.roleId}</span></td>
+          <td>
+            <span class="badge ${badgeClass}">
+              ${u.userStatus || 'ACTIVE'}
+            </span>
+          </td>
+          <td>
+            <button
+              class="btn btn-light"
+              onclick='editUser(${JSON.stringify(u)})'
+            >
+              Edit
+            </button>
+          </td>
+        </tr>
+      `;
+            tbody.append(row);
+        });
+    }
+
+
+
+    // ==============================
+    // EDIT USER
+    // ==============================
+    function editUser(u) {
+        $('#userId').val(u.userId);
+        $('#userName').val(u.userName);
+        $('#userPassword').val(u.userPassword);
+        $('#roleId').val(u.roleId);
+        $('#userStatus').val(u.userStatus);
+
+        $('#formTitle').text('Update System User');
+        $('#saveBtn').text('Update User');
+
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+    }
+
+
+
+    // ==============================
+    // RESET FORM
+    // ==============================
+    function resetForm() {
+        $('#userForm')[0].reset();
+        $('#userId').val('');
+        $('#formTitle').text('Create System User');
+        $('#saveBtn').text('+ Create User');
+    }
+
+</script>
 
 </body>
 </html>
